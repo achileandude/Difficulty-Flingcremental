@@ -1,19 +1,25 @@
-<!-- Include ExpantaNum.js from a CDN -->
-<script src="https://jsdelivr.net"></script>
-
-<div id="stud-count">Studs: 0</div>
-<button onclick="clickStud()">Get Studs</button>
-
-<script src="script.js"></script>
-<div id="stud-count">Studs: 0</div>
-<button onclick="clickStud()">Get Studs</button>
-
-<hr> <!-- Visual separator -->
-
-<!-- Upgrade Button -->
-<button id="upg1-btn" onclick="buyUpgrade1()">
-    Upgrade 1 (Lvl 0): FREE
-</button>
-
-<script src="https://jsdelivr.net"></script>
-<script src="script.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stud Incremental</title>
+    <!-- Load ExpantaNum from CDN first -->
+    <script src="https://jsdelivr.net"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="stud-display">Studs: <span id="stud-count">0</span></div>
+        <div id="stud-per-sec">Gain: <span id="sps-count">0</span>/s</div>
+        
+        <button id="upgrade-btn">
+            <div class="name">It ALL begins here.</div>
+            <div class="level"><span id="current-level">0</span>/10</div>
+            <div class="desc">Start generating 1 Stud per second, 2nd level and beyond adds 1 to the Stud gain, level 10 unlocks another feature.</div>
+            <div class="cost-text">Cost: <span id="cost-display">Free</span></div>
+        </button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
