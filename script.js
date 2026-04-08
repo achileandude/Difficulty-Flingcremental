@@ -44,6 +44,9 @@ function updateUI() {
     }
 }
 
+// Call updateUI once so the starting values display correctly right away!
+updateUI();
+
 // Game Loop
 setInterval(() => {
     if (sps.gt(0)) {
