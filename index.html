@@ -250,6 +250,13 @@ function updateCard(id, cost) {
     
     updateCard('mult', EN(500).mul(EN(2).pow(game.multLvl)).ceil());
     updateCard('comp', EN(2500).mul(EN(5).pow(game.compLvl)).ceil());
+// --- Inside updateUI() ---
+if (game.spike >= 2) { 
+    // These now unlock much earlier!
+    document.getElementById('upg-acc').classList.remove('hidden');
+    document.getElementById('upg-vel').classList.remove('hidden');
+}
+
 }
 
         function format(n) {
