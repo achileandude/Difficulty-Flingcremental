@@ -137,21 +137,32 @@ function getPPS() {
 
         function buy(id) {
     let cost = EN(0);
+    
     if (id === 'base') {
-        // First level is FREE, second level is 3, then scales by 1.25x
+        if (game.baseLvl >= 15) return;
         cost = game.baseLvl === 0 ? EN(0) : EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil();
     }
-    if (id === 'mult') cost = EN(500).mul(EN(2).pow(game.multLvl)).ceil();
-    if (id === 'comp') cost = EN(2500).mul(EN(5).pow(game.compLvl)).ceil();
+    
+    if (id === 'mult') {
+        if (game.multLvl >= 30) return;
+        // x1.6 scaling
+        cost = EN(500).mul(EN(1.6).pow(game.multLvl)).ceil();
+    }
+    
+    if (id === 'comp') {
+        if (game.compLvl >= 15) return;
+        // Logic: 3x scaling for lv 0-4, 4x for 5-9, 5x for 10-14
+        let scaleBase = 3 + Math.floor(game.compLvl / 5); 
+        cost = EN(2500).mul(EN(scaleBase).pow(game.compLvl)).ceil();
+    }
 
     if (game.studs.gte(cost)) {
         if (!cost.eq(0)) game.studs = game.studs.sub(cost);
-        if (id === 'base') game.baseLvl++;
-        if (id === 'mult') game.multLvl++;
-        if (id === 'comp') game.compLvl++;
+        game[id + "Lvl"]++; 
         updateUI();
     }
 }
+
 
         function updateUI() {
     document.getElementById('stud-display').innerText = format(game.studs);
