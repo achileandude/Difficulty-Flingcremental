@@ -242,6 +242,9 @@ function updateCard(id, cost) {
     if (lvlEl) lvlEl.innerText = game[`${id}Lvl`];
     if (costEl) costEl.innerText = cost.eq(0) ? "FREE" : "Cost: " + format(cost);
     if (cardEl) cardEl.classList.toggle('disabled', game.studs.lt(cost));
+   if (id === 'acc') return game.accBought ? "BOUGHT" : EN(2.5e14);
+if (id === 'vel') return game.velBought ? "BOUGHT" : EN(1e16);
+
 }
 
     // Update Upgrade Costs & States
