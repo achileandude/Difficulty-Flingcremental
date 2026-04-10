@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flingcremental: Spike Milestones</title>
+    <script src="https://cdn.jsdelivr.net/gh/Naruyoko/ExpantaNum.js@master/ExpantaNum.js"></script>
+    <style>
+        :root { 
+            --bg: #050508; --panel: #0f0f15; --accent: #00ffcc; --text: #e0e0e0; --border: #1e1e26;
+        }
+        
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background-color: var(--bg); color: var(--text); 
+            margin: 0; display: flex; flex-direction: column; 
+            align-items: center; padding-top: 5vh;
+            min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* TIER GRADIENTS */
+        .tier-display {
+            font-weight: 900; font-size: 2em; text-transform: uppercase;
+            letter-spacing: 5px; margin-bottom: 5px; transition: 0.5s;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .tier-locked { background: linear-gradient(#444, #222); }
+        .tier-0 { background: linear-gradient(#888, #fff); } /* The First Difficulty */
+        .tier-1 { background: linear-gradient(#4facfe, #00f2fe); } /* Gap */
+
+        .main-display { text-align: center; margin-bottom: 30px; }
+        .stud-count { font-size: 4em; font-weight: 900; color: #fff; margin: 0; }
+        .pps { font-size: 1.2em; color: #667; margin-top: 5px; }
+
+        /* MILESTONE PANEL */
+        .milestone-box {
+            width: 400px; background: #151520; border: 1px solid #333;
+            border-radius: 12px; padding: 15px; margin-bottom: 30px;
+            text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .ms-title { font-weight: bold; color: var(--accent); font-size: 0.9em; text-transform: uppercase; }
+
+        .upgrade-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 900px; }
+        .card {
+            width: 260px; background: var(--panel); border: 2px solid var(--border);
+            border-radius: 16px; padding: 20px; cursor: pointer; transition: 0.2s;
+        }
+        .card:hover:not(.disabled) { border-color: var(--accent); transform: translateY(-3px); }
+        .card.disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .u-title { font-weight: 800; color: #fff; display: block; margin-bottom: 5px; }
+        .u-desc { font-size: 0.8em; color: #778; height: 40px; display: block; }
+        .u-stats { display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.9em; }
+        .u-cost { color: #ffcc00; font-weight: bold; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="main-display">
+        <div id="tier-name" class="tier-display tier-locked">UNRANKED</div>
+        <h1 class="stud-count" id="stud-display">0</h1>
+        <div class="pps">+<span id="pps-display">0</span>/s</div>
+    </div>
+
+    <div class="milestone-box" id="ms-container">
+        <div class="ms-title">Next Difficulty Spike</div>
+        <div id="ms-desc" style="font-size: 0.85em; margin: 10px 0;">Reach 100 Studs to progress.</div>
+        <div style="width: 100%; height: 6px; background: #000; border-radius: 3px; overflow: hidden;">
+            <div id="ms-fill" style="width: 0%; height: 100%; background: var(--accent); transition: 0.3s;"></div>
+        </div>
+    </div>
+
+    <div class="upgrade-grid">
+        <div class="card" id="upg-base" onclick="buy('base')">
+            <span class="u-title">It ALL begins here.</span>
+            <span class="u-desc">The foundation of everything. Adds +1 base Stud/s.</span>
+            <div class="u-stats">
+                <span style="color:var(--accent)">Lv. <span id="lvl-base">0</span></span>
+                <span class="u-cost" id="cost-base">FREE</span>
+            </div>
+        </div>
+
+        <div class="card hidden" id="upg-mult" onclick="buy('mult')">
+            <span class="u-title">Multiplication</span>
+            <span class="u-desc">Multiply all Stud production by 1.5x.</span>
+            <div class="u-stats">
+                <span style="color:var(--accent)">Lv. <span id="lvl-mult">0</span></span>
+                <span class="u-cost" id="cost-mult">500</span>
+            </div>
+        </div>
+
+        <div class="card hidden" id="upg-comp" onclick="buy('comp')">
+            <span class="u-title">Compounding</span>
+            <span class="u-desc">Studs increase production based on current levels.</span>
+            <div class="u-stats">
+                <span style="color:var(--accent)">Lv. <span id="lvl-comp">0</span></span>
+                <span class="u-cost" id="cost-comp">2,500</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EN = (n) => new ExpantaNum(n);
+
+        let game = {
+            studs: EN(0),
+            highest: EN(0),
+            spike: 0,
+            baseLvl: 0,
+            multLvl: 0,
+            compLvl: 0,
+            lastTick: Date.now()
+        };
+
+        const SPIKES = [
+            { id: 1, name: "The First Difficulty", req: EN(100), boost: 3, desc: "Unlocks Multiplication & Compounding." },
+            { id: 2, name: "Gap", req: EN(10000), boost: 10, desc: "Further boosts logic coming soon..." }
+        ];
+
+        function getPPS() {
+            let p = EN(game.baseLvl);
+            
+            // Spike Boosts
+            if (game.spike >= 1) p = p.mul(3);
+            if (game.spike >= 2) p = p.mul(10);
+
+            // Upgrades
+            p = p.mul(EN(1.5).pow(game.multLvl));
+            p = p.mul(EN(1).add(game.compLvl * 0.1));
+
+            return p;
+        }
+
+        function buy(id) {
+            let cost = EN(0);
+            if (id === 'base') cost = game.baseLvl === 0 ? EN(0) : EN(10).mul(EN(1.15).pow(game.baseLvl - 1)).ceil();
+            if (id === 'mult') cost = EN(500).mul(EN(2).pow(game.multLvl)).ceil();
+            if (id === 'comp') cost = EN(2500).mul(EN(5).pow(game.compLvl)).ceil();
+
+            if (game.studs.gte(cost)) {
+                if (!cost.eq(0)) game.studs = game.studs.sub(cost);
+                if (id === 'base') game.baseLvl++;
+                if (id === 'mult') game.multLvl++;
+                if (id === 'comp') game.compLvl++;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+    document.getElementById('stud-display').innerText = format(game.studs);
+    document.getElementById('pps-display').innerText = format(getPPS());
+
+    // 1. Spike Milestone Logic
+    let next = SPIKES[game.spike];
+    if (next && game.studs.gte(next.req)) {
+        game.spike++;
+        next = SPIKES[game.spike];
+        console.log("SPIKE BROKEN!");
+    }
+
+    // 2. Progress Bar & Milestone Text
+    if (next) {
+        let pct = game.studs.div(next.req).mul(100).toNumber();
+        document.getElementById('ms-fill').style.width = Math.min(100, pct) + "%";
+        document.getElementById('ms-desc').innerText = `Reach ${format(next.req)} Studs to break the ${next.name} spike.`;
+    } else {
+        document.getElementById('ms-container').classList.add('hidden');
+    }
+
+    // 3. Tier Name & Styling
+    const tierEl = document.getElementById('tier-name');
+    if (game.spike === 0) {
+        tierEl.innerText = "UNRANKED";
+        tierEl.className = "tier-display tier-locked";
+    } else {
+        tierEl.innerText = SPIKES[game.spike-1].name;
+        tierEl.className = `tier-display tier-${game.spike-1}`;
+    }
+
+    // 4. Reveal Hidden Upgrades (Multiplication & Compounding)
+    if (game.spike >= 1) {
+        document.getElementById('upg-mult').classList.remove('hidden');
+        document.getElementById('upg-comp').classList.remove('hidden');
+    }
+
+    // 5. Update Upgrade Costs & Disable Buttons if too expensive
+    updateCard('base', game.baseLvl === 0 ? EN(0) : EN(10).mul(EN(1.15).pow(game.baseLvl - 1)).ceil());
+    updateCard('mult', EN(500).mul(EN(2).pow(game.multLvl)).ceil());
+    updateCard('comp', EN(2500).mul(EN(5).pow(game.compLvl)).ceil());
+} // <--- THIS is the bracket that was likely missing or doubled!
+
+
+        function format(n) {
+            let num = EN(n);
+            if (num.lt(1000)) return num.toNumber().toFixed(0);
+            return num.toExponential(2).replace("e+", "e");
+        }
+
+        setInterval(() => {
+            let now = Date.now();
+            let diff = (now - game.lastTick) / 1000;
+            game.lastTick = now;
+            game.studs = game.studs.add(getPPS().mul(diff));
+            if (game.studs.gt(game.highest)) game.highest = game.studs;
+            updateUI();
+        }, 50);
+    </script>
+</body>
+</html>
