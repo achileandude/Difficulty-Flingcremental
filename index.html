@@ -183,7 +183,31 @@ function getPPS() {
         tierEl.innerText = SPIKES[game.spike-1].name;
         tierEl.className = `tier-display tier-${game.spike-1}`;
     }
+    // --- Cost Calculation Logic ---
+    let bCost = game.baseLvl >= 15 ? "MAX" : (game.baseLvl === 0 ? "FREE" : format(EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil()));
+    
+    let mCost = game.multLvl >= 30 ? "MAX" : format(EN(500).mul(EN(1.6).pow(game.multLvl)).ceil());
+    
+    // Dynamic scale for the 3rd upgrade
+    let currentScale = 3 + Math.floor(game.compLvl / 5);
+    let cCost = game.compLvl >= 15 ? "MAX" : format(EN(2500).mul(EN(currentScale).pow(game.compLvl)).ceil());
 
+    // --- Update the Elements ---
+    document.getElementById('lvl-base').innerText = game.baseLvl + "/15";
+    document.getElementById('cost-base').innerText = bCost === "FREE" || bCost === "MAX" ? bCost : "Cost: " + bCost;
+    
+    document.getElementById('lvl-mult').innerText = game.multLvl + "/30";
+    document.getElementById('cost-mult').innerText = mCost === "MAX" ? mCost : "Cost: " + mCost;
+    
+    document.getElementById('lvl-comp').innerText = game.compLvl + "/15";
+    document.getElementById('cost-comp').innerText = cCost === "MAX" ? cCost : "Cost: " + cCost;
+
+    // --- Reveal the Spike bar ONLY at Max Base Level ---
+    if (game.baseLvl >= 15) {
+        document.getElementById('ms-container').classList.remove('hidden');
+    } else {
+        document.getElementById('ms-container').classList.add('hidden');
+    }
     // 4. Reveal Hidden Upgrades (Multiplication & Compounding)
     if (game.spike >= 1) {
         document.getElementById('upg-mult').classList.remove('hidden');
