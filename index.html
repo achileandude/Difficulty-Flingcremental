@@ -119,20 +119,23 @@
             { id: 2, name: "Gap", req: EN(10000), boost: 10, desc: "Further boosts logic coming soon..." }
         ];
 
-        // --- REPLACE getPPS() IN YOUR SCRIPT TAG ---
 function getPPS() {
-    let p = EN(game.baseLvl); // Base production from 'It ALL begins here'
+    let p = EN(game.baseLvl); // Base production (capped at 15)
     
-    // Applying the Milestone Multipliers
-    if (game.spike >= 1) p = p.mul(3);  // "The First Difficulty" 3x Boost
-    if (game.spike >= 2) p = p.mul(10); // "Gap" 10x Boost
+    // Applying the Milestone Multipliers (Spike 1 = 3x, Spike 2 = 10x)
+    if (game.spike >= 1) p = p.mul(3);
+    if (game.spike >= 2) p = p.mul(10);
 
-    // Adding Upgrade Multipliers
-    p = p.mul(EN(1.5).pow(game.multLvl));      // Multiplication Upgrade
-    p = p.mul(EN(1).add(game.compLvl * 0.1));  // Compounding Upgrade
+    // Multiplication Upgrade
+    p = p.mul(EN(1.5).pow(game.multLvl));
+
+    // Compounding Upgrade (NEW: x2.5 compounding per level)
+    // Formula: gain * (2.5 ^ level)
+    p = p.mul(EN(2.5).pow(game.compLvl));
 
     return p;
 }
+
 
 
         function buy(id) {
