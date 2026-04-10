@@ -25,8 +25,8 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .tier-locked { background: linear-gradient(#444, #222); }
-        .tier-0 { background: linear-gradient(#888, #fff); } /* The First Difficulty */
-        .tier-1 { background: linear-gradient(#4facfe, #00f2fe); } /* Gap */
+        .tier-1 { background: linear-gradient(#888, #fff); } /* The First Difficulty */
+        .tier-2 { background: linear-gradient(to bottom, #00ff00, #006400, #000); } /* The Lower Gap */
 
         .main-display { text-align: center; margin-bottom: 30px; }
         .stud-count { font-size: 4em; font-weight: 900; color: #fff; margin: 0; }
@@ -111,13 +111,15 @@
             baseLvl: 0,
             multLvl: 0,
             compLvl: 0,
+            accBought: false,
+            velBought: false,
             lastTick: Date.now()
         };
 
         const SPIKES = [
-            { id: 1, name: "The First Difficulty", req: EN(100), boost: 3, desc: "Unlocks Multiplication & Compounding." },
-            { id: 2, name: "Gap", req: EN(10000), boost: 10, desc: "Further boosts logic coming soon..." }
-        ];
+    { name: "The First Difficulty", req: EN(100) },
+    { name: "The Lower Gap", req: EN(1e4) } // Gap is gone, this is now Spike 2
+];
 
 function getPPS() {
     let p = EN(game.baseLvl); // Base production (capped at 15)
