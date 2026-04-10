@@ -189,6 +189,16 @@ function getPPS() {
         document.getElementById('upg-mult').classList.remove('hidden');
         document.getElementById('upg-comp').classList.remove('hidden');
     }
+function updateCard(id, cost) {
+    // This helper updates the level, cost text, and button state for each card
+    const lvlEl = document.getElementById(`lvl-${id}`);
+    const costEl = document.getElementById(`cost-${id}`);
+    const cardEl = document.getElementById(`upg-${id}`);
+
+    if (lvlEl) lvlEl.innerText = game[`${id}Lvl`];
+    if (costEl) costEl.innerText = cost.eq(0) ? "FREE" : "Cost: " + format(cost);
+    if (cardEl) cardEl.classList.toggle('disabled', game.studs.lt(cost));
+}
 
     // Update Upgrade Costs & States
     let baseCost = game.baseLvl === 0 ? EN(0) : EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil();
