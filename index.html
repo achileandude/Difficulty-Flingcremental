@@ -136,9 +136,7 @@ function getPPS() {
     return p;
 }
 
-
-
-        function buy(id) {
+function buy(id) {
     let cost = EN(0);
     
     if (id === 'base') {
@@ -148,13 +146,12 @@ function getPPS() {
     
     if (id === 'mult') {
         if (game.multLvl >= 30) return;
-        // x1.6 scaling
-        cost = EN(500).mul(EN(1.6).pow(game.multLvl)).ceil();
+        // NEW: Starting price 150, lower 1.4x scaling
+        cost = EN(150).mul(EN(1.4).pow(game.multLvl)).ceil();
     }
     
     if (id === 'comp') {
         if (game.compLvl >= 15) return;
-        // Logic: 3x scaling for lv 0-4, 4x for 5-9, 5x for 10-14
         let scaleBase = 3 + Math.floor(game.compLvl / 5); 
         cost = EN(2500).mul(EN(scaleBase).pow(game.compLvl)).ceil();
     }
