@@ -119,34 +119,39 @@
             { id: 2, name: "Gap", req: EN(10000), boost: 10, desc: "Further boosts logic coming soon..." }
         ];
 
-        function getPPS() {
-            let p = EN(game.baseLvl);
-            
-            // Spike Boosts
-            if (game.spike >= 1) p = p.mul(3);
-            if (game.spike >= 2) p = p.mul(10);
+        // --- REPLACE getPPS() IN YOUR SCRIPT TAG ---
+function getPPS() {
+    let p = EN(game.baseLvl); // Base production from 'It ALL begins here'
+    
+    // Applying the Milestone Multipliers
+    if (game.spike >= 1) p = p.mul(3);  // "The First Difficulty" 3x Boost
+    if (game.spike >= 2) p = p.mul(10); // "Gap" 10x Boost
 
-            // Upgrades
-            p = p.mul(EN(1.5).pow(game.multLvl));
-            p = p.mul(EN(1).add(game.compLvl * 0.1));
+    // Adding Upgrade Multipliers
+    p = p.mul(EN(1.5).pow(game.multLvl));      // Multiplication Upgrade
+    p = p.mul(EN(1).add(game.compLvl * 0.1));  // Compounding Upgrade
 
-            return p;
-        }
+    return p;
+}
+
 
         function buy(id) {
-            let cost = EN(0);
-            if (id === 'base') cost = game.baseLvl === 0 ? EN(0) : EN(10).mul(EN(1.15).pow(game.baseLvl - 1)).ceil();
-            if (id === 'mult') cost = EN(500).mul(EN(2).pow(game.multLvl)).ceil();
-            if (id === 'comp') cost = EN(2500).mul(EN(5).pow(game.compLvl)).ceil();
+    let cost = EN(0);
+    if (id === 'base') {
+        // First level is FREE, second level is 3, then scales by 1.25x
+        cost = game.baseLvl === 0 ? EN(0) : EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil();
+    }
+    if (id === 'mult') cost = EN(500).mul(EN(2).pow(game.multLvl)).ceil();
+    if (id === 'comp') cost = EN(2500).mul(EN(5).pow(game.compLvl)).ceil();
 
-            if (game.studs.gte(cost)) {
-                if (!cost.eq(0)) game.studs = game.studs.sub(cost);
-                if (id === 'base') game.baseLvl++;
-                if (id === 'mult') game.multLvl++;
-                if (id === 'comp') game.compLvl++;
-                updateUI();
-            }
-        }
+    if (game.studs.gte(cost)) {
+        if (!cost.eq(0)) game.studs = game.studs.sub(cost);
+        if (id === 'base') game.baseLvl++;
+        if (id === 'mult') game.multLvl++;
+        if (id === 'comp') game.compLvl++;
+        updateUI();
+    }
+}
 
         function updateUI() {
     document.getElementById('stud-display').innerText = format(game.studs);
@@ -185,12 +190,13 @@
         document.getElementById('upg-comp').classList.remove('hidden');
     }
 
-    // 5. Update Upgrade Costs & Disable Buttons if too expensive
-    updateCard('base', game.baseLvl === 0 ? EN(0) : EN(10).mul(EN(1.15).pow(game.baseLvl - 1)).ceil());
+    // Update Upgrade Costs & States
+    let baseCost = game.baseLvl === 0 ? EN(0) : EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil();
+    updateCard('base', baseCost);
+    
     updateCard('mult', EN(500).mul(EN(2).pow(game.multLvl)).ceil());
     updateCard('comp', EN(2500).mul(EN(5).pow(game.compLvl)).ceil());
-} // <--- THIS is the bracket that was likely missing or doubled!
-
+}
 
         function format(n) {
             let num = EN(n);
