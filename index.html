@@ -193,11 +193,19 @@ function buy(id) {
         tierEl.innerText = SPIKES[game.spike-1].name;
         tierEl.className = `tier-display tier-${game.spike-1}`;
     }
-    // --- Cost Calculation Logic ---
+
     let bCost = game.baseLvl >= 15 ? "MAX" : (game.baseLvl === 0 ? "FREE" : format(EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil()));
     
-    let mCost = game.multLvl >= 30 ? "MAX" : format(EN(500).mul(EN(1.6).pow(game.multLvl)).ceil());
+    // New Multiplication Cost logic
+    let mCost = game.multLvl >= 30 ? "MAX" : format(EN(150).mul(EN(1.4).pow(game.multLvl)).ceil());
     
+    let cScale = 3 + Math.floor(game.compLvl / 5);
+    let cCost = game.compLvl >= 15 ? "MAX" : format(EN(2500).mul(EN(cScale).pow(game.compLvl)).ceil());
+
+    document.getElementById('lvl-mult').innerText = game.multLvl + "/30";
+    document.getElementById('cost-mult').innerText = mCost === "MAX" ? mCost : "Cost: " + mCost;
+    // ... apply the others similarly
+
     // Dynamic scale for the 3rd upgrade
     let currentScale = 3 + Math.floor(game.compLvl / 5);
     let cCost = game.compLvl >= 15 ? "MAX" : format(EN(2500).mul(EN(currentScale).pow(game.compLvl)).ceil());
