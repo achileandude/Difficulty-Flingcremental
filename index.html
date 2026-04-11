@@ -19,14 +19,16 @@
         }
 
         /* TIER GRADIENTS */
-        .tier-display {
-            font-weight: 900; font-size: 2em; text-transform: uppercase;
-            letter-spacing: 5px; margin-bottom: 5px; transition: 0.5s;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        /* Update your tier classes to look like this */
+.tier-1 { 
+    background: linear-gradient(to bottom, #00ff00 0%, #006400 50%, #000000 100%);
+    -webkit-background-clip: text; /* For Chrome/Safari */
+    background-clip: text;         /* Standard property - FIXES LINE 25 */
+    -webkit-text-fill-color: transparent;
+}
         .tier-locked { background: linear-gradient(#444, #222); }
-        .tier-1 { background: linear-gradient(#888, #fff); } /* The First Difficulty */
-        .tier-2 { background: linear-gradient(to bottom, #00ff00, #006400, #000); } /* The Lower Gap */
+        .tier-0 { background: linear-gradient(#888, #fff); } /* The First Difficulty */
+        .tier-1 { background: linear-gradient(to bottom, #00ff00, #006400, #000); } /* The Lower Gap */
 
         .main-display { text-align: center; margin-bottom: 30px; }
         .stud-count { font-size: 4em; font-weight: 900; color: #fff; margin: 0; }
@@ -158,6 +160,21 @@ function buy(id) {
         cost = EN(2500).mul(EN(scaleBase).pow(game.compLvl)).ceil();
     }
 
+    if (id === 'acc' && !game.accBought) {
+    let cost = EN(2.5e14);
+    if (game.studs.gte(cost)) {
+        game.studs = game.studs.sub(cost);
+        game.accBought = true;
+    }
+}
+    if (id === 'vel' && !game.velBought) {
+    let cost = EN(1e16);
+    if (game.studs.gte(cost)) {
+        game.studs = game.studs.sub(cost);
+        game.velBought = true;
+    }
+}
+
     if (game.studs.gte(cost)) {
         if (!cost.eq(0)) game.studs = game.studs.sub(cost);
         game[id + "Lvl"]++; 
@@ -196,22 +213,24 @@ function buy(id) {
         tierEl.className = `tier-display tier-${game.spike-1}`;
     }
 
-    let bCost = game.baseLvl >= 15 ? "MAX" : (game.baseLvl === 0 ? "FREE" : format(EN(3).mul(EN(1.25).pow(game.baseLvl - 1)).ceil()));
-    
-    // New Multiplication Cost logic
-    let mCost = game.multLvl >= 30 ? "MAX" : format(EN(150).mul(EN(1.4).pow(game.multLvl)).ceil());
-    
-    let cScale = 3 + Math.floor(game.compLvl / 5);
-    let cCost = game.compLvl >= 15 ? "MAX" : format(EN(2500).mul(EN(cScale).pow(game.compLvl)).ceil());
+    // --- Inside updateUI(), replace the redundant let declarations ---
 
+// 1. Calculate the values once
+const bCostVal = getCost('base');
+const mCostVal = getCost('mult');
+const cCostVal = getCost('comp'); // Declare this ONCE as a unique name
+
+// 2. Use those values to update the cards
+updateCard('base');
+updateCard('mult');
+updateCard('comp');
+
+// 3. Update the labels (This is where the variables were likely doubling up)
+document.getElementById('cost-base').innerText = (typeof bCostVal === "string") ? bCostVal : "Cost: " + format(bCostVal);
+document.getElementById('cost-mult').innerText = (typeof mCostVal === "string") ? mCostVal : "Cost: " + format(mCostVal);
+document.getElementById('cost-comp').innerText = (typeof cCostVal === "string") ? cCostVal : "Cost: " + format(cCostVal);
     document.getElementById('lvl-mult').innerText = game.multLvl + "/30";
     document.getElementById('cost-mult').innerText = mCost === "MAX" ? mCost : "Cost: " + mCost;
-    // ... apply the others similarly
-
-    // Dynamic scale for the 3rd upgrade
-    let currentScale = 3 + Math.floor(game.compLvl / 5);
-    let cCost = game.compLvl >= 15 ? "MAX" : format(EN(2500).mul(EN(currentScale).pow(game.compLvl)).ceil());
-
     // --- Update the Elements ---
     document.getElementById('lvl-base').innerText = game.baseLvl + "/15";
     document.getElementById('cost-base').innerText = bCost === "FREE" || bCost === "MAX" ? bCost : "Cost: " + bCost;
@@ -242,8 +261,8 @@ function updateCard(id, cost) {
     if (lvlEl) lvlEl.innerText = game[`${id}Lvl`];
     if (costEl) costEl.innerText = cost.eq(0) ? "FREE" : "Cost: " + format(cost);
     if (cardEl) cardEl.classList.toggle('disabled', game.studs.lt(cost));
-   if (id === 'acc') return game.accBought ? "BOUGHT" : EN(2.5e14);
-if (id === 'vel') return game.velBought ? "BOUGHT" : EN(1e16);
+    if (id === 'acc') return game.accBought ? "BOUGHT" : EN(2.5e14);
+    if (id === 'vel') return game.velBought ? "BOUGHT" : EN(1e16);
 
 }
 
@@ -279,3 +298,4 @@ if (game.spike >= 2) {
     </script>
 </body>
 </html>
+if (id ===)
