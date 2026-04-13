@@ -381,7 +381,9 @@
       bpUpg4: false,
       bpUpg5: false,
       activeTrial: null,
-      trialCompletions: [false, false, false],
+      trialCompletions: [false,
+        false,
+        false],
       notation: "Default",
       lastTick: Date.now()
     };
@@ -391,16 +393,16 @@
       req: EN(100),
       desc: "x3 Stud gain | Unlock 2 Stud upgrades"
     },
-    {
-      name: "Lower Gap",
-      req: EN(1e4),
-      desc: "x10 Stud gain | Unlock 2 Stud upgrades"
-    },
-    {
-      name: "Negativity",
-      req: EN(3.333e19),
-      desc: "x15 Stud gain | Unlock the first reset. Baseplates."
-    }];
+      {
+        name: "Lower Gap",
+        req: EN(1e4),
+        desc: "x10 Stud gain | Unlock 2 Stud upgrades"
+      },
+      {
+        name: "Negativity",
+        req: EN(3.333e19),
+        desc: "x15 Stud gain | Unlock the first reset. Baseplates."
+      }];
 
     function getPPS() {
       let p = EN(game.baseLvl);
@@ -409,17 +411,31 @@
         if (game.spike >= 2) p = p.mul(10);
         if (game.spike >= 3) p = p.mul(15);
       }
-      let mBase = 1.5 + (game.trialCompletions[1] ? 0.25 : 0);
+      let mBase = 1.5 + (game.trialCompletions[1] ? 0.25: 0);
       p = p.mul(EN(mBase).pow(game.multLvl));
-      let cBase = (game.bpUpg1 ? 3.5 : 3.0) + (game.trialCompletions[1] ? 0.25 : 0);
+      let cBase = (game.bpUpg1 ? 3.5: 3.0) + (game.trialCompletions[1] ? 0.25: 0);
       p = p.mul(EN(cBase).pow(game.compLvl));
-      let wBase = game.bpUpg4 ? 1.5 : 1.325;
+      let wBase = game.bpUpg4 ? 1.5: 1.325;
       p = p.mul(EN(wBase).pow(game.weakLvl));
-      if (game.accBought) {
-        let exp = 0.25 + (game.bpUpg2 ? 0.05 : 0) + (game.bpUpg5 ? 0.2 : 0);
-        let boost = game.velBought ? game.studs.add(1).pow(exp) : game.studs.add(10).log10();
-        p = p.mul(boost.max(1));
-      }
+if (game.accBought) {
+    // Ensure exponents are never undefined
+    let exp = 0.25; 
+    if (game.bpUpg2) exp += 0.05;
+    if (game.bpUpg5) exp += 0.2;
+
+    let boost = EN(1);
+    if (game.velBought) {
+        // Velocity: Studs^exponent
+        boost = game.studs.add(1).pow(exp);
+    } else {
+        // Acceleration: log10(Studs)
+        boost = game.studs.add(10).log10();
+    }
+    
+    // Final safety: boost should never be less than 1 or it will REDUCE production
+    p = p.mul(boost.max(1));
+}
+
       if (game.bpUpg4) p = p.mul(1e12).pow(1.1);
       if (game.trialCompletions[0]) p = p.pow(1.05);
       if (game.trialCompletions[2]) p = p.mul(1e6);
@@ -434,20 +450,20 @@
           if (game.baseLvl.eq(0)) return "Free";
           return EN(3).mul(EN(1.15).pow(game.baseLvl.sub(1))).ceil();
         case 'mult':
-          let mCap = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
+          let mCap = 30 + (game.bpUpg1 ? 70: 0) + (game.trialCompletions[1] ? 25: 0);
           if (game.multLvl.gte(mCap)) return "Maxed";
           let mCost = EN(150).mul(EN(1.4).pow(game.multLvl));
           if (game.multLvl.gte(100)) mCost = mCost.pow(2);
           return mCost.ceil();
         case 'comp':
-          let cCap = game.bpUpg1 ? 25 : 15;
+          let cCap = game.bpUpg1 ? 25: 15;
           if (game.compLvl.gte(cCap)) return "Maxed";
-          let cBase = (game.bpUpg1 ? 3.5 : 3.0) + Math.floor(game.compLvl.toNumber() / 5);
+          let cBase = (game.bpUpg1 ? 3.5: 3.0) + Math.floor(game.compLvl.toNumber() / 5);
           let cCost = EN(2500).mul(EN(cBase).pow(game.compLvl));
           if (game.compLvl.gte(15)) cCost = cCost.pow(1.5);
           return cCost.ceil();
         case 'weak':
-          let wCap = 50 + (game.bpUpg4 ? 25 : 0);
+          let wCap = 50 + (game.bpUpg4 ? 25: 0);
           if (game.weakLvl.gte(wCap)) return "Maxed";
           let wCost = EN(1e45).mul(EN(1.7).pow(game.weakLvl));
           if (game.weakLvl.gte(50)) wCost = wCost.pow(1.8);
@@ -464,7 +480,28 @@
     }
 
     function formatStandard(num) {
-      const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd", "Vg"];
+      const suffixes = ["",
+        "k",
+        "M",
+        "B",
+        "T",
+        "Qa",
+        "Qi",
+        "Sx",
+        "Sp",
+        "Oc",
+        "No",
+        "Dc",
+        "Ud",
+        "Dd",
+        "Td",
+        "Qd",
+        "qd",
+        "Sd",
+        "sd",
+        "Od",
+        "Nd",
+        "Vg"];
       let e = num.log10().floor().toNumber();
       let idx = Math.floor(e / 3);
       if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
@@ -511,8 +548,10 @@
           updateMilestones();
         }
       }
-      if (game.spike >= 1) ["mult", "comp"].forEach(i => document.getElementById('upg-' + i).classList.remove('hidden'));
-      if (game.spike >= 2) ["acc", "vel"].forEach(i => document.getElementById('upg-' + i).classList.remove('hidden'));
+      if (game.spike >= 1) ["mult",
+        "comp"].forEach(i => document.getElementById('upg-' + i).classList.remove('hidden'));
+      if (game.spike >= 2) ["acc",
+        "vel"].forEach(i => document.getElementById('upg-' + i).classList.remove('hidden'));
       if (game.bpUpg3) document.getElementById('upg-weak').classList.remove('hidden');
       let btn = document.getElementById('bp-reset-btn');
       if (btn) {
@@ -520,17 +559,26 @@
         document.getElementById('bp-gain').innerText = format(getBaseplateGain());
         document.getElementById('bp-count').innerText = format(game.baseplates);
       }
-      ["base", "mult", "comp", "acc", "vel", "weak"].forEach(id => updateCard(id));
-      [1, 2, 3].forEach(i => {
-        let card = document.getElementById('bp-upg-' + i);
-        if (card) {
-          card.classList.toggle('disabled', game.baseplates.lt(i === 1 ? 1 : (i === 2 ? 3 : 100)) || game['bpUpg' + i]);
-          document.getElementById('bp-lvl-' + i).innerText = game['bpUpg' + i] ? "1/1" : "0/1";
-        }
-      });
+      ["base",
+        "mult",
+        "comp",
+        "acc",
+        "vel",
+        "weak"].forEach(id => updateCard(id));
+      [1,
+        2,
+        3].forEach(i => {
+          let card = document.getElementById('bp-upg-' + i);
+          if (card) {
+            card.classList.toggle('disabled', game.baseplates.lt(i === 1 ? 1: (i === 2 ? 3: 100)) || game['bpUpg' + i]);
+            document.getElementById('bp-lvl-' + i).innerText = game['bpUpg' + i] ? "1/1": "0/1";
+          }
+        });
       const t = document.getElementById('tier-name');
-      t.innerText = game.spike === 0 ? "UNRANKED" : SPIKES[Math.min(game.spike - 1, 2)].name;
-      t.className = `tier-display tier-${Math.min(game.spike, 2)}`;
+      t.innerText = game.spike === 0 ? "UNRANKED": SPIKES[Math.min(game.spike - 1,
+        2)].name;
+      t.className = `tier-display tier-${Math.min(game.spike,
+        2)}`;
       updateStatsTab();
     }
 
@@ -543,7 +591,10 @@
     }
 
     function exitTrial() {
-      const goals = [null, EN(1e50), EN(1e25), EN(1e12)];
+      const goals = [null,
+        EN(1e50),
+        EN(1e25),
+        EN(1e12)];
       if (game.activeTrial && game.studs.gte(goals[game.activeTrial])) {
         game.trialCompletions[game.activeTrial - 1] = true;
         alert("Trial " + game.activeTrial + " Complete!");
@@ -561,11 +612,11 @@
       const cost = getCost(id);
       const card = document.getElementById(`upg-${id}`);
       if (!card) return;
-      document.getElementById(`cost-${id}`).innerText = (typeof cost === "string") ? cost : "Cost: " + format(cost);
+      document.getElementById(`cost-${id}`).innerText = (typeof cost === "string") ? cost: "Cost: " + format(cost);
       let lvl = document.getElementById(`lvl-${id}`);
-      if (id === 'acc' || id === 'vel') lvl.innerText = game[id + "Bought"] ? "1/1" : "0/1";
+      if (id === 'acc' || id === 'vel') lvl.innerText = game[id + "Bought"] ? "1/1": "0/1";
       else {
-        let m = (id === 'mult') ? (game.bpUpg1 ? 100 : 30) : (id === 'comp' ? (game.bpUpg1 ? 25 : 15) : (id === 'base' ? 15 : 50));
+        let m = (id === 'mult') ? (game.bpUpg1 ? 100: 30): (id === 'comp' ? (game.bpUpg1 ? 25: 15): (id === 'base' ? 15: 50));
         lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m;
       }
       let canAfford = (cost === "Free") || (typeof cost !== "string" && game.studs.gte(cost));
@@ -577,7 +628,7 @@
       if (cost === "Maxed" || cost === "Bought" || cost === "Free") {
         if (cost !== "Free") return;
       }
-      let price = (cost === "Free") ? EN(0) : cost;
+      let price = (cost === "Free") ? EN(0): cost;
       if (game.studs.gte(price)) {
         game.studs = game.studs.sub(price);
         if (id === 'acc') game.accBought = true;
@@ -589,7 +640,10 @@
     }
 
     function buyBP(n) {
-      let costs = [0, 1, 3, 100];
+      let costs = [0,
+        1,
+        3,
+        100];
       if (game.baseplates.gte(costs[n]) && !game['bpUpg' + n]) {
         game.baseplates = game.baseplates.sub(costs[n]);
         game['bpUpg' + n] = true;
@@ -597,50 +651,54 @@
       }
     }
 
-function resetBaseplate(forced = false) {
-    // If we are in a trial and it's NOT a forced reset (like entering/exiting), stop the player.
-    if (game.activeTrial !== null && !forced) {
+    function resetBaseplate(forced = false) {
+      // If we are in a trial and it's NOT a forced reset (like entering/exiting), stop the player.
+      if (game.activeTrial !== null && !forced) {
         alert("You cannot Fling while in a Trial! Complete the goal or Abandon it.");
         return;
+      }
+
+      let gain = getBaseplateGain();
+
+      // Only ask for confirmation if it's a manual click and not a forced trial jump
+      if (!forced && !confirm("Fling for " + format(gain) + " Baseplates? This resets your Studs and Upgrades!")) return;
+
+      game.baseplates = game.baseplates.add(gain);
+
+      // RESET LOGIC
+      game.studs = EN(0);
+      game.spike = 0;
+      game.baseLvl = EN(0);
+      game.multLvl = EN(0);
+      game.compLvl = EN(0);
+      game.weakLvl = EN(0);
+      game.accBought = false;
+      game.velBought = false;
+
+      showTab('upgrades');
+      updateUI();
     }
-
-    let gain = getBaseplateGain();
-    
-    // Only ask for confirmation if it's a manual click and not a forced trial jump
-    if (!forced && !confirm("Fling for " + format(gain) + " Baseplates? This resets your Studs and Upgrades!")) return;
-
-    game.baseplates = game.baseplates.add(gain);
-    
-    // RESET LOGIC
-    game.studs = EN(0);
-    game.spike = 0;
-    game.baseLvl = EN(0);
-    game.multLvl = EN(0);
-    game.compLvl = EN(0);
-    game.weakLvl = EN(0);
-    game.accBought = false;
-    game.velBought = false;
-    
-    showTab('upgrades');
-    updateUI();
-}
 
     function updateMilestones() {
       let h = "";
       for (let i = 0; i <= Math.min(game.spike, 2); i++) {
         let s = SPIKES[i];
         let unlocked = game.spike > i;
-        h += `<div class="milestone-entry" style="border-color: ${unlocked ? (i == 2 ? '#a0f' : '#0f0') : '#444'}">
-          <b style="color:${unlocked ? '#fff' : '#666'}">${s.name}</b><br>
-          <small>${s.desc}</small><br>
-          <small style="color:var(--accent)">Req: ${format(s.req)} Studs</small>
-          </div>`;
+        h += `<div class="milestone-entry" style="border-color: ${unlocked ? (i == 2 ? '#a0f': '#0f0'): '#444'}">
+        <b style="color:${unlocked ? '#fff': '#666'}">${s.name}</b><br>
+        <small>${s.desc}</small><br>
+        <small style="color:var(--accent)">Req: ${format(s.req)} Studs</small>
+        </div>`;
       }
       document.getElementById('spike-list').innerHTML = h;
     }
 
-    function setNotation(n) { game.notation = n; updateUI(); }
-    function save() { localStorage.setItem("flingSave", JSON.stringify(game)); }
+    function setNotation(n) {
+      game.notation = n; updateUI();
+    }
+    function save() {
+      localStorage.setItem("flingSave", JSON.stringify(game));
+    }
     function load() {
       let s = localStorage.getItem("flingSave");
       if (!s) return;
@@ -661,11 +719,17 @@ function resetBaseplate(forced = false) {
       game.playTime = d.playTime || 0;
       game.notation = d.notation || "Default";
       game.activeTrial = d.activeTrial || null;
-      game.trialCompletions = d.trialCompletions || [false, false, false];
+      game.trialCompletions = d.trialCompletions || [false,
+        false,
+        false];
       updateUI();
     }
 
-    function hardReset() { if (confirm("Reset everything?")) { localStorage.clear(); location.reload(); } }
+    function hardReset() {
+      if (confirm("Reset everything?")) {
+        localStorage.clear(); location.reload();
+      }
+    }
 
     load();
     updateMilestones();
@@ -682,5 +746,5 @@ function resetBaseplate(forced = false) {
     }, 50);
     setInterval(save, 10000);
   </script>
-  </body>
+</body>
 </html>
