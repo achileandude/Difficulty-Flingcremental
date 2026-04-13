@@ -597,20 +597,33 @@
       }
     }
 
-    function resetBaseplate(forced = false) {
-      if (game.activeTrial !== null && !forced) {
-        alert("You cannot Fling while in a Trial.");
+function resetBaseplate(forced = false) {
+    // If we are in a trial and it's NOT a forced reset (like entering/exiting), stop the player.
+    if (game.activeTrial !== null && !forced) {
+        alert("You cannot Fling while in a Trial! Complete the goal or Abandon it.");
         return;
-      }
-      let gain = getBaseplateGain();
-      if (!forced && !confirm("Fling for " + format(gain) + " Baseplates?")) return;
-      game.baseplates = game.baseplates.add(gain);
-      game.studs = EN(0); game.spike = 0; game.baseLvl = EN(0);
-      game.multLvl = EN(0); game.compLvl = EN(0); game.weakLvl = EN(0);
-      game.accBought = false; game.velBought = false;
-      showTab('upgrades');
-      updateUI();
     }
+
+    let gain = getBaseplateGain();
+    
+    // Only ask for confirmation if it's a manual click and not a forced trial jump
+    if (!forced && !confirm("Fling for " + format(gain) + " Baseplates? This resets your Studs and Upgrades!")) return;
+
+    game.baseplates = game.baseplates.add(gain);
+    
+    // RESET LOGIC
+    game.studs = EN(0);
+    game.spike = 0;
+    game.baseLvl = EN(0);
+    game.multLvl = EN(0);
+    game.compLvl = EN(0);
+    game.weakLvl = EN(0);
+    game.accBought = false;
+    game.velBought = false;
+    
+    showTab('upgrades');
+    updateUI();
+}
 
     function updateMilestones() {
       let h = "";
