@@ -1,516 +1,769 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Difficulty Flingcremental</title>
-    <script src="https://cdn.jsdelivr.net/gh/Naruyoko/ExpantaNum.js@master/ExpantaNum.js"></script>
-    <style>
-        :root {
-            --bg: #050508;
-            --panel: #0f0f15;
-            --accent: #00ffcc;
-            --text: #e0e0e0;
-            --border: #1e1e26;
-            --purple: #a0f;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-        
-        /* Typography */
-        h1 { margin: 10px 0; font-weight: 900; }
-        .tier-display { font-weight: 900; font-size: 2.5em; letter-spacing: 3px; margin-bottom: 5px; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tier-locked { background: #444; -webkit-text-fill-color: #444; }
-        .tier-0 { background: linear-gradient(#eee, #444); }
-        .tier-1 { background: linear-gradient(#0f0, #060, #000); }
-        .tier-2 { background: linear-gradient(to bottom, #800080, #4b0082, #000); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Difficulty Flingcremental</title>
+  <script src="https://cdn.jsdelivr.net/gh/Naruyoko/ExpantaNum.js@master/ExpantaNum.js"></script>
+  <style>
+:root {
+    --bg: #050508;
+    --panel: #0f0f15;
+    --accent: #00ffcc;
+    --text: #e0e0e0;
+    --border: #1e1e26;
+    --purple: #a0f;
+  }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      margin: 0;
+    }
 
-        .stud-count { font-size: 2.5em; color: #fff; }
-        .pps-display { color: #888; margin-bottom: 20px; }
+    /* Typography */
+    h1 {
+      margin: 10px 0;
+      font-weight: 900;
+    }
+    .tier-display {
+      font-weight: 900;
+      font-size: 2.5em;
+      letter-spacing: 3px;
+      margin-bottom: 5px;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tier-locked {
+      background: #444;
+      -webkit-text-fill-color: #444;
+    }
+    .tier-0 {
+      background: linear-gradient(#eee, #444);
+    }
+    .tier-1 {
+      background: linear-gradient(#0f0, #060, #000);
+    }
+    .tier-2 {
+      background: linear-gradient(to bottom, #800080, #4b0082, #000);
+    }
 
-        /* Tabs */
-        .tabs-nav { display: flex; gap: 10px; margin-bottom: 30px; }
-        button { padding: 10px 20px; background: var(--panel); border: 1px solid var(--border); color: var(--text); cursor: pointer; border-radius: 4px; }
-        button:hover { border-color: var(--accent); }
-        .hidden { display: none !important; }
+    .stud-count {
+      font-size: 2.5em;
+      color: #fff;
+    }
+    .pps-display {
+      color: #888;
+      margin-bottom: 20px;
+    }
 
-        /* Progress Bar */
-        .ms-box { width: 400px; background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 30px; text-align: center; }
-        .ms-bar { width: 100%; height: 12px; background: #000; border-radius: 6px; overflow: hidden; margin-top: 10px; }
-        .ms-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.3s ease-out; }
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    button {
+      padding: 10px 20px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      border-color: var(--accent);
+    }
+    .hidden {
+      display: none !important;
+    }
 
-        /* Grid & Cards */
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px; }
-        .card { width: 280px; background: var(--panel); border: 2px solid var(--border); border-radius: 15px; padding: 20px; transition: 0.2s; position: relative; }
-        .card:hover:not(.disabled) { border-color: var(--accent); transform: translateY(-2px); }
-        .card.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        .bp-card { border-color: #4b0082; background: #0a0510; }
-        
-        .u-title { font-size: 1.2em; font-weight: bold; display: block; color: #fff; margin-bottom: 5px; }
-        .u-desc { font-size: 0.85em; color: #aaa; display: block; min-height: 40px; }
-        .u-stats { display: flex; justify-content: space-between; margin-top: 15px; font-weight: bold; }
-        .u-cost { color: #fc0; }
+    /* Progress Bar */
+    .ms-box {
+      width: 400px;
+      background: #111;
+      border: 1px solid #333;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .ms-bar {
+      width: 100%;
+      height: 12px;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .ms-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: 0.3s ease-out;
+    }
 
-        /* Baseplate Reset */
-        .reset-btn { padding: 20px; background: #222; color: #555; border-radius: 12px; border: none; width: 100%; max-width: 400px; cursor: not-allowed; font-weight: bold; margin-top: 20px; }
-        .reset-btn.ready { background: #4b0082; color: white; cursor: pointer; box-shadow: 0 0 20px rgba(160, 0, 255, 0.5); }
-        
-        .milestone-entry { background: #ffffff05; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid #444; text-align: left; }
-    </style>
+    /* Grid & Cards */
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1000px;
+    }
+    .card {
+      width: 280px;
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: 15px;
+      padding: 20px;
+      transition: 0.2s;
+      position: relative;
+    }
+    .card:hover:not(.disabled) {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .card.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+    .bp-card {
+      border-color: #4b0082;
+      background: #0a0510;
+    }
+
+    .u-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      display: block;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+    .u-desc {
+      font-size: 0.85em;
+      color: #aaa;
+      display: block;
+      min-height: 40px;
+    }
+    .u-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .u-cost {
+      color: #fc0;
+    }
+
+    /* Baseplate Reset */
+    .reset-btn {
+      padding: 20px;
+      background: #222;
+      color: #555;
+      border-radius: 12px;
+      border: none;
+      width: 100%;
+      max-width: 400px;
+      cursor: not-allowed;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .reset-btn.ready {
+      background: #4b0082;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(160, 0, 255, 0.5);
+    }
+
+    .milestone-entry {
+      background: #ffffff05;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border-left: 5px solid #444;
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="tier-name" class="tier-display tier-locked">UNRANKED</div>
-    <h1 class="stud-count">You have advanced <span id="stud-display">0</span> Studs.</h1>
-    <div id="pps-display" class="pps-display">+0/s</div>
+  <div id="tier-name" class="tier-display tier-locked">
+    UNRANKED
+  </div>
+  <h1 class="stud-count">You have advanced <span id="stud-display">0</span> Studs.</h1>
+  <div id="pps-display" class="pps-display">
+    +0/s
+  </div>
 
-    <div class="tabs-nav">
-        <button onclick="showTab('upgrades')">Studs</button>
-        <button id="tab-btn-spikes" class="hidden" onclick="showTab('spikes')">Difficulty Spikes</button>
-        <button id="tab-btn-baseplates" class="hidden" onclick="showTab('baseplates')">Baseplates</button>
-				<button id="tab-btn-trials" class="hidden" onclick="showTab('trials')">Trials</button>
-				<button id="tab-btn-stats" onclick="showTab('stats')">Stats</button>
-        <button onclick="showTab('settings')">Settings</button>
+  <div class="tabs-nav">
+    <button onclick="showTab('upgrades')">Studs</button>
+    <button id="tab-btn-spikes" class="hidden" onclick="showTab('spikes')">Difficulty Spikes</button>
+    <button id="tab-btn-baseplates" class="hidden" onclick="showTab('baseplates')">Baseplates</button>
+    <button id="tab-btn-trials" class="hidden" onclick="showTab('trials')">Trials</button>
+    <button id="tab-btn-stats" onclick="showTab('stats')">Stats</button>
+    <button onclick="showTab('settings')">Settings</button>
+  </div>
+
+  <div id="ms-container" class="ms-box hidden">
+    <div id="ms-desc">
+      Collecting Data...
     </div>
-
-    <div id="ms-container" class="ms-box hidden">
-        <div id="ms-desc">Collecting Data...</div>
-        <div class="ms-bar"><div id="ms-fill" class="ms-fill"></div></div>
+    <div class="ms-bar">
+      <div id="ms-fill" class="ms-fill"></div>
     </div>
+  </div>
 
-    <div id="tab-upgrades" class="tab-content">
-        <div class="grid">
-            <div class="card" id="upg-base" onclick="buy('base')">
-                <span class="u-title">It ALL begins here.</span>
-                <span class="u-desc">Your journey into the infinite starts here. Adds to base production.</span>
-                <div class="u-stats"><span id="lvl-base">0/15</span><span id="cost-base" class="u-cost">FREE</span></div>
-            </div>
-            <div class="card hidden" id="upg-mult" onclick="buy('mult')">
-                <span class="u-title">Multiplication</span>
-                <span class="u-desc">Apply a x1.5 multiplier to your total Stud gain.</span>
-                <div class="u-stats"><span id="lvl-mult">0/30</span><span id="cost-mult" class="u-cost">0</span></div>
-            </div>
-            <div class="card hidden" id="upg-comp" onclick="buy('comp')">
-                <span class="u-title">Multiplication the 2nd</span>
-                <span class="u-desc">A much stronger multiplier that scales based on level.</span>
-                <div class="u-stats"><span id="lvl-comp">0/15</span><span id="cost-comp" class="u-cost">0</span></div>
-            </div>
-            <div class="card hidden" id="upg-acc" onclick="buy('acc')">
-                <span class="u-title">Acceleration</span>
-                <span class="u-desc">Current Studs provide a logarithmic boost to production.</span>
-                <div class="u-stats"><span id="lvl-acc">0/1</span><span id="cost-acc" class="u-cost">0</span></div>
-            </div>
-            <div class="card hidden" id="upg-vel" onclick="buy('vel')">
-                <span class="u-title">Velocity</span>
-                <span class="u-desc">Acceleration formula becomes Studs^0.25.</span>
-                <div class="u-stats"><span id="lvl-vel">0/1</span><span id="cost-vel" class="u-cost">0</span></div>
-            </div>
-            <div class="card hidden" id="upg-weak" onclick="buy('weak')">
-                <span class="u-title">Weakened Compound</span>
-                <span class="u-desc">Boost gain by x1.325 compounding per level.</span>
-                <div class="u-stats"><span id="lvl-weak">0/50</span><span id="cost-weak" class="u-cost">0</span></div>
-            </div>
+  <div id="tab-upgrades" class="tab-content">
+    <div class="grid">
+      <div class="card" id="upg-base" onclick="buy('base')">
+        <span class="u-title">It ALL begins here.</span>
+        <span class="u-desc">Your journey into the infinite starts here. Adds to base production.</span>
+        <div class="u-stats">
+          <span id="lvl-base">0/15</span><span id="cost-base" class="u-cost">FREE</span>
         </div>
-    </div>
-
-    <div id="tab-spikes" class="tab-content hidden" style="width: 100%; max-width: 600px;">
-        <h2>Difficulty Milestone History</h2>
-        <div id="spike-list"></div>
-    </div>
-
-    <div id="tab-baseplates" class="tab-content hidden" style="text-align: center;">
-        <h2 style="color: var(--purple)">Baseplates: <span id="bp-count">0</span></h2>
-        <button id="bp-reset-btn" class="reset-btn" onclick="resetBaseplate()">
-            Fling for <span id="bp-gain">0</span> Baseplates<br>
-            <small id="bp-req-text">(Req: 5.00e20 Studs)</small>
-        </button>
-        <div class="grid" style="margin-top: 30px;">
-            <div class="card bp-card" id="bp-upg-1" onclick="buyBP(1)">
-                <span class="u-title">Expanded Limits</span>
-                <span class="u-desc">Multiplication cap 30 -> 100. Multiplication the 2nd base +0.5 and +10 cap. Scales harsher.</span>
-                <div class="u-stats"><span id="bp-lvl-1">0/1</span><span class="u-cost">1 BP</span></div>
-            </div>
-            <div class="card bp-card" id="bp-upg-2" onclick="buyBP(2)">
-                <span class="u-title">Loads O' Studs!</span>
-                <span class="u-desc">x1000 Stud gain and +0.05 to Acceleration's exponent.</span>
-                <div class="u-stats"><span id="bp-lvl-2">0/1</span><span class="u-cost">3 BP</span></div>
-            </div>
-            <div class="card bp-card" id="bp-upg-3" onclick="buyBP(3)">
-                <span class="u-title">New Upgrades</span>
-                <span class="u-desc">Unlocks the Weakened Compound upgrade in the Studs tab.</span>
-                <div class="u-stats"><span id="bp-lvl-3">0/1</span><span class="u-cost">100 BP</span></div>
-            </div>
+      </div>
+      <div class="card hidden" id="upg-mult" onclick="buy('mult')">
+        <span class="u-title">Multiplication</span>
+        <span class="u-desc">Apply a x1.5 multiplier to your total Stud gain.</span>
+        <div class="u-stats">
+          <span id="lvl-mult">0/30</span><span id="cost-mult" class="u-cost">0</span>
         </div>
+      </div>
+      <div class="card hidden" id="upg-comp" onclick="buy('comp')">
+        <span class="u-title">Multiplication the 2nd</span>
+        <span class="u-desc">A much stronger multiplier that scales based on level.</span>
+        <div class="u-stats">
+          <span id="lvl-comp">0/15</span><span id="cost-comp" class="u-cost">0</span>
+        </div>
+      </div>
+      <div class="card hidden" id="upg-acc" onclick="buy('acc')">
+        <span class="u-title">Acceleration</span>
+        <span class="u-desc">Current Studs provide a logarithmic boost to production.</span>
+        <div class="u-stats">
+          <span id="lvl-acc">0/1</span><span id="cost-acc" class="u-cost">0</span>
+        </div>
+      </div>
+      <div class="card hidden" id="upg-vel" onclick="buy('vel')">
+        <span class="u-title">Velocity</span>
+        <span class="u-desc">Acceleration formula becomes Studs^0.25.</span>
+        <div class="u-stats">
+          <span id="lvl-vel">0/1</span><span id="cost-vel" class="u-cost">0</span>
+        </div>
+      </div>
+      <div class="card hidden" id="upg-weak" onclick="buy('weak')">
+        <span class="u-title">Weakened Compound</span>
+        <span class="u-desc">Boost gain by x1.325 compounding per level.</span>
+        <div class="u-stats">
+          <span id="lvl-weak">0/50</span><span id="cost-weak" class="u-cost">0</span>
+        </div>
+      </div>
     </div>
+  </div>
 
-<div id="tab-stats" class="tab-content hidden">
+  <div id="tab-spikes" class="tab-content hidden" style="width: 100%; max-width: 600px;">
+    <h2>Difficulty Milestone History</h2>
+    <div id="spike-list"></div>
+  </div>
+
+  <div id="tab-baseplates" class="tab-content hidden" style="text-align: center;">
+    <h2 style="color: var(--purple)">Baseplates: <span id="bp-count">0</span></h2>
+    <button id="bp-reset-btn" class="reset-btn" onclick="resetBaseplate()">
+      Fling for <span id="bp-gain">0</span> Baseplates<br>
+      <small id="bp-req-text">(Req: 5.00e20 Studs)</small>
+    </button>
+    <div class="grid" style="margin-top: 30px;">
+      <div class="card bp-card" id="bp-upg-1" onclick="buyBP(1)">
+        <span class="u-title">Expanded Limits</span>
+        <span class="u-desc">Multiplication cap 30 -> 100. Multiplication the 2nd base +0.5 and +10 cap. Scales harsher.</span>
+        <div class="u-stats">
+          <span id="bp-lvl-1">0/1</span><span class="u-cost">1 BP</span>
+        </div>
+      </div>
+      <div class="card bp-card" id="bp-upg-2" onclick="buyBP(2)">
+        <span class="u-title">Loads O' Studs!</span>
+        <span class="u-desc">x1000 Stud gain and +0.05 to Acceleration's exponent.</span>
+        <div class="u-stats">
+          <span id="bp-lvl-2">0/1</span><span class="u-cost">3 BP</span>
+        </div>
+      </div>
+      <div class="card bp-card" id="bp-upg-3" onclick="buyBP(3)">
+        <span class="u-title">New Upgrades</span>
+        <span class="u-desc">Unlocks the Weakened Compound upgrade in the Studs tab.</span>
+        <div class="u-stats">
+          <span id="bp-lvl-3">0/1</span><span class="u-cost">100 BP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-stats" class="tab-content hidden">
     <h2>Statistics</h2>
     <div class="ms-box" style="text-align: left;">
-        <p>Total Studs: <span id="stats-total">0</span></p>
-        <p>Time Played: <span id="stats-time">0</span>s</p>
-        <p>Trials Done: <span id="stats-trials">0</span>/3</p>
+      <p>
+        Total Studs: <span id="stats-total">0</span>
+      </p>
+      <p>
+        Time Played: <span id="stats-time">0</span>s
+      </p>
+      <p>
+        Trials Done: <span id="stats-trials">0</span>/3
+      </p>
     </div>
-</div>
+  </div>
 
-<div id="tab-trials" class="tab-content hidden">
+  <div id="tab-trials" class="tab-content hidden">
     <h2 style="color: #ff4444;">TRIALS</h2>
     <p id="active-trial-text" style="color: #ffa500; font-weight: bold;"></p>
     <div class="grid">
-        <div class="card" onclick="enterTrial(1)">
-            <b class="u-title">Trial 1: Rooting</b>
-            <span class="u-desc">Stud gain is Square Rooted.</span>
-            <div class="u-stats">Goal: 1.00e50</div>
+      <div class="card" onclick="enterTrial(1)">
+        <b class="u-title">Trial 1: Rooting</b>
+        <span class="u-desc">Stud gain is Square Rooted.</span>
+        <div class="u-stats">
+          Goal: 1.00e50
         </div>
-        <div class="card" onclick="enterTrial(2)">
-            <b class="u-title">Trial 2: Futile</b>
-            <span class="u-desc">Baseplate upgrades are disabled.</span>
-            <div class="u-stats">Goal: 1.00e25</div>
+      </div>
+      <div class="card" onclick="enterTrial(2)">
+        <b class="u-title">Trial 2: Futile</b>
+        <span class="u-desc">Baseplate upgrades are disabled.</span>
+        <div class="u-stats">
+          Goal: 1.00e25
         </div>
-        <div class="card" onclick="enterTrial(3)">
-            <b class="u-title">Trial 3: Obby Accurate</b>
-            <span class="u-desc">Difficulty Spikes give no boost.</span>
-            <div class="u-stats">Goal: 1.00e12</div>
+      </div>
+      <div class="card" onclick="enterTrial(3)">
+        <b class="u-title">Trial 3: Obby Accurate</b>
+        <span class="u-desc">Difficulty Spikes give no boost.</span>
+        <div class="u-stats">
+          Goal: 1.00e12
         </div>
+      </div>
     </div>
     <button onclick="exitTrial()" style="margin-top: 20px; background: #a0f; color: white; padding: 15px;">Finish / Abandon Trial</button>
-</div>
+  </div>
 
-    <div id="tab-settings" class="tab-content hidden">
-        <div class="ms-box" style="width: 300px;">
-            <h3>Notations</h3>
-            <button onclick="setNotation('Standard')">Default</button>
-            <button onclick="setNotation('Scientific')">Scientific</button>
-            <button onclick="setNotation('Engineering')">Engineering</button>
-            <button onclick="setNotation('Mixed Scientific')">Mixed Scientific</button>
-            <hr style="border: 0.5px solid #333; margin: 20px 0;">
-            <button onclick="save()">Manual Save</button>
-            <button onclick="hardReset()" style="background: #600;">HARD RESET</button>
-        </div>
+  <div id="tab-settings" class="tab-content hidden">
+    <div class="ms-box" style="width: 300px;">
+      <h3>Notations</h3>
+      <button onclick="setNotation('Standard')">Default</button>
+      <button onclick="setNotation('Scientific')">Scientific</button>
+      <button onclick="setNotation('Engineering')">Engineering</button>
+      <button onclick="setNotation('Mixed Scientific')">Mixed Scientific</button>
+      <hr style="border: 0.5px solid #333; margin: 20px 0;">
+      <button onclick="save()">Manual Save</button>
+      <button onclick="hardReset()" style="background: #600;">HARD RESET</button>
     </div>
+  </div>
 
-    <script>
-        const EN = (n) => new ExpantaNum(n);
+  <script>
+    const EN = (n) => new ExpantaNum(n);
 
-        let game = {
-            studs: EN(0),
-            spike: 0,
-            baseLvl: EN(0), multLvl: EN(0), compLvl: EN(0), weakLvl: EN(0),
-            accBought: false, velBought: false,
-            baseplates: EN(0),
-            bpUpg1: false, bpUpg2: false, bpUpg3: false,
-            totalStuds: EN(0),
-            playTime: 0,
-            bpUpg4: false, bpUpg5: false,
-            activeTrial: null,
-            trialCompletions: [false, false, false],
-            notation: "Default",
-            lastTick: Date.now()
-        };
+    let game = {
+      studs: EN(0),
+      spike: 0,
+      baseLvl: EN(0),
+      multLvl: EN(0),
+      compLvl: EN(0),
+      weakLvl: EN(0),
+      accBought: false,
+      velBought: false,
+      baseplates: EN(0),
+      bpUpg1: false,
+      bpUpg2: false,
+      bpUpg3: false,
+      totalStuds: EN(0),
+      playTime: 0,
+      bpUpg4: false,
+      bpUpg5: false,
+      activeTrial: null,
+      trialCompletions: [false,
+        false,
+        false],
+      notation: "Default",
+      lastTick: Date.now()
+    };
 
-        const SPIKES = [
-            { name: "The First Difficulty", req: EN(100), desc: "x3 Stud gain | Unlock 2 Stud upgrades" },
-            { name: "Lower Gap", req: EN(1e4), desc: "x10 Stud gain | Unlock 2 Stud upgrades" },
-            { name: "Negativity", req: EN(3.333e19), desc: "x15 Stud gain | Unlock the first reset. Baseplates." }
-        ];
+    const SPIKES = [{
+      name: "The First Difficulty",
+      req: EN(100),
+      desc: "x3 Stud gain | Unlock 2 Stud upgrades"
+    },
+      {
+        name: "Lower Gap",
+        req: EN(1e4),
+        desc: "x10 Stud gain | Unlock 2 Stud upgrades"
+      },
+      {
+        name: "Negativity",
+        req: EN(3.333e19),
+        desc: "x15 Stud gain | Unlock the first reset. Baseplates."
+      }];
 
-        function getPPS() {
-    let p = EN(game.baseLvl);
+    function getPPS() {
+      let p = EN(game.baseLvl);
 
-    // --- TRIAL DEBUFFS ---
-    if (game.activeTrial === 3) {
+      // --- TRIAL DEBUFFS ---
+      if (game.activeTrial === 3) {
         // Obby Accurate: Difficulty Spikes don't boost
-    } else {
+      } else {
         if (game.spike >= 1) p = p.mul(3);
         if (game.spike >= 2) p = p.mul(10);
         if (game.spike >= 3) p = p.mul(15);
-    }
+      }
 
-    // --- UPGRADES ---
-    let mBase = 1.5 + (game.trialCompletions[1] ? 0.25 : 0);
-    p = p.mul(EN(mBase).pow(game.multLvl));
-    
-    let cBase = (game.bpUpg1 ? 3.5 : 3.0) + (game.trialCompletions[1] ? 0.25 : 0);
-    p = p.mul(EN(cBase).pow(game.compLvl));
+      // --- UPGRADES ---
+      let mBase = 1.5 + (game.trialCompletions[1] ? 0.25: 0);
+      p = p.mul(EN(mBase).pow(game.multLvl));
 
-    // Weakened Compound (Inflation Buff)
-    let wBase = game.bpUpg4 ? 1.5 : 1.325;
-    p = p.mul(EN(wBase).pow(game.weakLvl));
+      let cBase = (game.bpUpg1 ? 3.5: 3.0) + (game.trialCompletions[1] ? 0.25: 0);
+      p = p.mul(EN(cBase).pow(game.compLvl));
 
-    if (game.accBought) {
-        let exp = 0.25 + (game.bpUpg2 ? 0.05 : 0) + (game.bpUpg5 ? 0.2 : 0);
-        let boost = game.velBought ? game.studs.add(1).pow(exp) : game.studs.add(10).log10();
+      // Weakened Compound (Inflation Buff)
+      let wBase = game.bpUpg4 ? 1.5: 1.325;
+      p = p.mul(EN(wBase).pow(game.weakLvl));
+
+      if (game.accBought) {
+        let exp = 0.25 + (game.bpUpg2 ? 0.05: 0) + (game.bpUpg5 ? 0.2: 0);
+        let boost = game.velBought ? game.studs.add(1).pow(exp): game.studs.add(10).log10();
         p = p.mul(boost.max(1));
+      }
+
+      // --- INFLATION & TRIAL REWARDS ---
+      if (game.bpUpg4) p = p.mul(1e12).pow(1.1); // Inflation
+      if (game.trialCompletions[0]) p = p.pow(1.05); // Rooting Reward
+      if (game.trialCompletions[2]) p = p.mul(1e6); // Obby Reward
+
+      // --- FINAL TRIAL MODIFIER ---
+      if (game.activeTrial === 1) p = p.sqrt(); // Rooting Debuff
+
+      return p;
     }
 
-    // --- INFLATION & TRIAL REWARDS ---
-    if (game.bpUpg4) p = p.mul(1e12).pow(1.1); // Inflation
-    if (game.trialCompletions[0]) p = p.pow(1.05); // Rooting Reward
-    if (game.trialCompletions[2]) p = p.mul(1e6); // Obby Reward
+    function getCost(id) {
+      switch (id) {
+        case 'base':
+          if (game.baseLvl.gte(15)) return "Maxed";
+          if (game.baseLvl.eq(0)) return "Free";
+          return EN(3).mul(EN(1.15).pow(game.baseLvl.sub(1))).ceil();
+        case 'mult':
+          let mCap = 30 + (game.bpUpg1 ? 70: 0) + (game.trialCompletions[1] ? 25: 0);
+          if (game.multLvl.gte(mCap)) return "Maxed";
+          let mCost = EN(150).mul(EN(1.4).pow(game.multLvl));
+          if (game.multLvl.gte(100)) mCost = mCost.pow(2); // WAY HARSHER
+          return mCost.ceil();
+        case 'comp':
+          let cCap = game.bpUpg1 ? 25: 15;
+          if (game.compLvl.gte(cCap)) return "Maxed";
+          let cBase = (game.bpUpg1 ? 3.5: 3.0) + Math.floor(game.compLvl.toNumber() / 5);
+          let cCost = EN(2500).mul(EN(cBase).pow(game.compLvl));
+          if (game.compLvl.gte(15)) cCost = cCost.pow(1.5);
+          return cCost.ceil();
+        case 'weak':
+          let wCap = 50 + (game.bpUpg4 ? 25: 0);
+          if (game.weakLvl.gte(wCap)) return "Maxed";
+          let wCost = EN(1e45).mul(EN(1.7).pow(game.weakLvl));
+          if (game.weakLvl.gte(50)) wCost = wCost.pow(1.8); // Harsher
+          return wCost.ceil();
+      }
+    }
 
-    // --- FINAL TRIAL MODIFIER ---
-    if (game.activeTrial === 1) p = p.sqrt(); // Rooting Debuff
+    function getBaseplateGain() {
+      if (game.studs.lt(5e20)) return EN(0);
+      let gain = game.studs.div(5e20).pow(0.2);
+      if (game.bpUpg4) gain = gain.mul(game.studs.pow(0.15)); // Studs boost BP gain
+      return gain.floor().max(1);
+    }
 
-    return p;
-}
-
-        function getCost(id) {
-            switch(id) {
-                case 'base':
-                    if (game.baseLvl.gte(15)) return "Maxed";
-                    if (game.baseLvl.eq(0)) return "Free";
-                    return EN(3).mul(EN(1.15).pow(game.baseLvl.sub(1))).ceil();
-                case 'mult':
-                    let mCap = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
-                    if (game.multLvl.gte(mCap)) return "Maxed";
-                    let mCost = EN(150).mul(EN(1.4).pow(game.multLvl));
-                    if (game.multLvl.gte(100)) mCost = mCost.pow(2); // WAY HARSHER
-                    return mCost.ceil();
-                case 'comp':
-                    let cCap = game.bpUpg1 ? 25 : 15;
-                    if (game.compLvl.gte(cCap)) return "Maxed";
-                    let cBase = (game.bpUpg1 ? 3.5 : 3.0) + Math.floor(game.compLvl.toNumber() / 5);
-                    let cCost = EN(2500).mul(EN(cBase).pow(game.compLvl));
-                    if (game.compLvl.gte(15)) cCost = cCost.pow(1.5);
-                    return cCost.ceil();
-                case 'weak':
-                    let wCap = 50 + (game.bpUpg4 ? 25 : 0);
-                    if (game.weakLvl.gte(wCap)) return "Maxed";
-                    let wCost = EN(1e45).mul(EN(1.7).pow(game.weakLvl));
-                    if (game.weakLvl.gte(50)) wCost = wCost.pow(1.8); // Harsher
-                    return wCost.ceil();
-            }
-        }
-
-        function getBaseplateGain() {
-            if (game.studs.lt(5e20)) return EN(0);
-            let gain = game.studs.div(5e20).pow(0.2);
-            if (game.bpUpg4) gain = gain.mul(game.studs.pow(0.15)); // Studs boost BP gain
-            return gain.floor().max(1);
-}
-
-        function formatStandard(num) {
-        const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd", "Vg"];
-        let e = num.log10().floor().toNumber();
-        let idx = Math.floor(e / 3);
-        if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
-        return num.toExponential(2).replace("e+", "e");
+    function formatStandard(num) {
+      const suffixes = ["",
+        "k",
+        "M",
+        "B",
+        "T",
+        "Qa",
+        "Qi",
+        "Sx",
+        "Sp",
+        "Oc",
+        "No",
+        "Dc",
+        "Ud",
+        "Dd",
+        "Td",
+        "Qd",
+        "qd",
+        "Sd",
+        "sd",
+        "Od",
+        "Nd",
+        "Vg"];
+      let e = num.log10().floor().toNumber();
+      let idx = Math.floor(e / 3);
+      if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
+      return num.toExponential(2).replace("e+", "e");
     }
 
     function format(n) {
-        let num = EN(n);
-        if (num.lt(1000)) return num.toNumber().toFixed(2);
-        
- 				if (game.notation === "Mixed Scientific") {
-    			if (num.lt(1e303)) return formatStandard(num); // Standard k, M, B logic
-    			return num.toExponential(2).replace("e+", "e");
-			}
-            }
-            return num.toExponential(2).replace("e+", "e");
-                if (game.notation === "Engineering") {
-                    let e = num.log10().floor().toNumber();
-                    let m = num.div(EN(10).pow(Math.floor(e / 3) * 3));
-                    return m.toFixed(2) + "e" + (Math.floor(e / 3) * 3);
-                }
-                const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd", "Vg"];
-                let e = num.log10().floor().toNumber();
-                let idx = Math.floor(e / 3);
-                if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
-                return num.toExponential(2).replace("e+", "e");
-        
-    
+      let num = EN(n);
+      if (num.lt(1000)) return num.toNumber().toFixed(2);
 
-        function updateStatsTab() {
-            const totalEl = document.getElementById('stats-total');
-            const timeEl = document.getElementById('stats-time');
-            const trialsEl = document.getElementById('stats-trials');
+      if (game.notation === "Mixed Scientific") {
+        if (num.lt(1e303)) return formatStandard(num); // Standard k, M, B logic
+        return num.toExponential(2).replace("e+", "e");
+      }
+    }
+    return num.toExponential(2).replace("e+", "e");
+    if (game.notation === "Engineering") {
+      let e = num.log10().floor().toNumber();
+      let m = num.div(EN(10).pow(Math.floor(e / 3) * 3));
+      return m.toFixed(2) + "e" + (Math.floor(e / 3) * 3);
+    }
+    const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd", "Vg"];
+    let e = num.log10().floor().toNumber();
+    let idx = Math.floor(e / 3);
+    if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
+    return num.toExponential(2).replace("e+", "e");
 
-            if (totalEl) totalEl.innerText = format(game.totalStuds);
-            if (timeEl) timeEl.innerText = Math.floor(game.playTime) + "s";
-            if (trialsEl) trialsEl.innerText = game.trialCompletions.filter(Boolean).length;
+
+
+    function updateStatsTab() {
+      const totalEl = document.getElementById('stats-total');
+      const timeEl = document.getElementById('stats-time');
+      const trialsEl = document.getElementById('stats-trials');
+
+      if (totalEl) totalEl.innerText = format(game.totalStuds);
+      if (timeEl) timeEl.innerText = Math.floor(game.playTime) + "s";
+      if (trialsEl) trialsEl.innerText = game.trialCompletions.filter(Boolean).length;
+    }
+
+    function updateUI() {
+      document.getElementById('stud-display').innerText = format(game.studs);
+      document.getElementById('pps-display').innerText = "+" + format(getPPS()) + "/s";
+
+      // Tab Buttons
+      if (game.baseLvl.gte(15)) document.getElementById('tab-btn-spikes').classList.remove('hidden');
+      if (game.spike >= 3) document.getElementById('tab-btn-baseplates').classList.remove('hidden');
+
+      // Milestone
+      let next = SPIKES[game.spike];
+      if (next) {
+        document.getElementById('ms-container').classList.remove('hidden');
+        document.getElementById('ms-fill').style.width = Math.min(100, game.studs.div(next.req).mul(100).toNumber()) + "%";
+        document.getElementById('ms-desc').innerText = `Next: ${next.name} (${format(next.req)})`;
+        if (game.studs.gte(next.req)) {
+          game.spike++; updateMilestones();
         }
+      }
 
-        function updateUI() {
-            document.getElementById('stud-display').innerText = format(game.studs);
-            document.getElementById('pps-display').innerText = "+" + format(getPPS()) + "/s";
+      // Cards Reveal
+      if (game.spike >= 1) ["mult",
+        "comp"].forEach(i => document.getElementById('upg-'+i).classList.remove('hidden'));
+      if (game.spike >= 2) ["acc",
+        "vel"].forEach(i => document.getElementById('upg-'+i).classList.remove('hidden'));
+      if (game.bpUpg3) document.getElementById('upg-weak').classList.remove('hidden');
 
-            // Tab Buttons
-            if (game.baseLvl.gte(15)) document.getElementById('tab-btn-spikes').classList.remove('hidden');
-            if (game.spike >= 3) document.getElementById('tab-btn-baseplates').classList.remove('hidden');
+      // Reset Button
+      let btn = document.getElementById('bp-reset-btn');
+      if (btn) {
+        btn.classList.toggle('ready', game.studs.gte(5e20));
+        document.getElementById('bp-gain').innerText = format(getBaseplateGain());
+        document.getElementById('bp-count').innerText = format(game.baseplates);
+      }
 
-            // Milestone
-            let next = SPIKES[game.spike];
-            if (next) {
-                document.getElementById('ms-container').classList.remove('hidden');
-                document.getElementById('ms-fill').style.width = Math.min(100, game.studs.div(next.req).mul(100).toNumber()) + "%";
-                document.getElementById('ms-desc').innerText = `Next: ${next.name} (${format(next.req)})`;
-                if (game.studs.gte(next.req)) { game.spike++; updateMilestones(); }
-            }
+      ["base",
+        "mult",
+        "comp",
+        "acc",
+        "vel",
+        "weak"].forEach(id => updateCard(id));
+      [1,
+        2,
+        3].forEach(i => {
+          let card = document.getElementById('bp-upg-'+i);
+          if (card) {
+            card.classList.toggle('disabled', game.baseplates.lt(i === 1 ? 1: (i === 2 ? 3: 100)) || game['bpUpg'+i]);
+            document.getElementById('bp-lvl-'+i).innerText = game['bpUpg'+i] ? "1/1": "0/1";
+          }
+        });
 
-            // Cards Reveal
-            if (game.spike >= 1) ["mult", "comp"].forEach(i => document.getElementById('upg-'+i).classList.remove('hidden'));
-            if (game.spike >= 2) ["acc", "vel"].forEach(i => document.getElementById('upg-'+i).classList.remove('hidden'));
-            if (game.bpUpg3) document.getElementById('upg-weak').classList.remove('hidden');
+      const t = document.getElementById('tier-name');
+      t.innerText = game.spike === 0 ? "UNRANKED": SPIKES[Math.min(game.spike-1,
+        2)].name;
+      t.className = `tier-display tier-${Math.min(game.spike,
+        2)}`;
+      updateStatsTab();
+    }
 
-            // Reset Button
-            let btn = document.getElementById('bp-reset-btn');
-            if (btn) {
-                btn.classList.toggle('ready', game.studs.gte(5e20));
-                document.getElementById('bp-gain').innerText = format(getBaseplateGain());
-                document.getElementById('bp-count').innerText = format(game.baseplates);
-            }
-
-            ["base", "mult", "comp", "acc", "vel", "weak"].forEach(id => updateCard(id));
-            [1, 2, 3].forEach(i => {
-                let card = document.getElementById('bp-upg-'+i);
-                if (card) {
-                    card.classList.toggle('disabled', game.baseplates.lt(i === 1 ? 1 : (i === 2 ? 3 : 100)) || game['bpUpg'+i]);
-                    document.getElementById('bp-lvl-'+i).innerText = game['bpUpg'+i] ? "1/1" : "0/1";
-                }
-            });
-
-            const t = document.getElementById('tier-name');
-            t.innerText = game.spike === 0 ? "UNRANKED" : SPIKES[Math.min(game.spike-1, 2)].name;
-            t.className = `tier-display tier-${Math.min(game.spike, 2)}`;
-            updateStatsTab();
-        }
-
-function enterTrial(n) {
-    if (game.activeTrial !== null) return;
-    if (confirm("Enter Trial " + n + "? (Forced Reset)")) {
+    function enterTrial(n) {
+      if (game.activeTrial !== null) return;
+      if (confirm("Enter Trial " + n + "? (Forced Reset)")) {
         game.activeTrial = n;
         resetBaseplate(true); // pass 'true' to skip the confirmation inside reset
+      }
     }
-}
 
-function exitTrial() {
-    const goals = [null, EN(1e50), EN(1e25), EN(1e12)];
-    if (game.activeTrial && game.studs.gte(goals[game.activeTrial])) {
+    function exitTrial() {
+      const goals = [null,
+        EN(1e50),
+        EN(1e25),
+        EN(1e12)];
+      if (game.activeTrial && game.studs.gte(goals[game.activeTrial])) {
         game.trialCompletions[game.activeTrial - 1] = true;
         alert("Trial " + game.activeTrial + " Complete!");
+      }
+      game.activeTrial = null;
+      resetBaseplate(true);
     }
-    game.activeTrial = null;
-    resetBaseplate(true);
-}
 
-        function showTab(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + id).classList.remove('hidden');
+    function showTab(id) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + id).classList.remove('hidden');
+    }
+
+    function updateCard(id) {
+      const cost = getCost(id);
+      const card = document.getElementById(`upg-${id}`);
+      if (!card) return;
+
+      document.getElementById(`cost-${id}`).innerText = (typeof cost === "string") ? cost: "Cost: " + format(cost);
+
+      let lvl = document.getElementById(`lvl-${id}`);
+      if (id === 'acc' || id === 'vel') lvl.innerText = game[id+"Bought"] ? "1/1": "0/1";
+      else {
+        let m = (id === 'mult') ? (game.bpUpg1 ? 100: 30): (id === 'comp' ? (game.bpUpg1 ? 25: 15): (id === 'base' ? 15: 50));
+        lvl.innerText = game[id+"Lvl"].toNumber() + "/" + m;
+      }
+
+      let canAfford = (cost === "Free") || (typeof cost !== "string" && game.studs.gte(cost));
+      card.classList.toggle('disabled', !canAfford || cost === "Maxed" || cost === "Bought");
+    }
+
+    function buy(id) {
+      let cost = getCost(id);
+
+      // Safety check: cost could be a string "Maxed" or "BOUGHT"
+      if (cost === "Maxed" || cost === "BOUGHT" || cost === "FREE") {
+        if (cost !== "FREE") return; // Exit if maxed
+      }
+
+      let price = (cost === "FREE") ? EN(0): cost;
+
+      if (game.studs.gte(price)) {
+        game.studs = game.studs.sub(price);
+
+        // Handle logic
+        if (id === 'acc') game.accBought = true;
+        else if (id === 'vel') game.velBought = true;
+        else if (id === 'weak') game.weakLvl = game.weakLvl.add(1);
+        else if (game[id + "Lvl"]) game[id + "Lvl"] = game[id + "Lvl"].add(1);
+
+        updateUI();
+      }
+    }
+
+    function buyBP(n) {
+      let costs = [0,
+        1,
+        3,
+        100];
+      if (game.baseplates.gte(costs[n]) && !game['bpUpg'+n]) {
+        game.baseplates = game.baseplates.sub(costs[n]);
+        game['bpUpg'+n] = true;
+        updateUI();
+      }
+    }
+
+    function resetBaseplate(forced = false) {
+      if (game.activeTrial !== null && !forced) {
+        alert("You cannot Fling while in a Trial.");
+        let gain = getBaseplateGain();
+        if (gain.lt(1)) return;
+        game.baseplates = game.baseplates.add(gain);
+        game.studs = EN(0); game.spike = 0; game.baseLvl = EN(0);
+        game.multLvl = EN(0); game.compLvl = EN(0); game.weakLvl = EN(0);
+        game.accBought = false; game.velBought = false;
+        showTab('upgrades');
+        updateUI();
+      }
+
+      function updateMilestones() {
+        let h = "";
+        for (let i = 0; i <= Math.min(game.spike, 2); i++) {
+          let s = SPIKES[i];
+          let unlocked = game.spike > i;
+          h += `<div class="milestone-entry" style="border-color: ${unlocked ? (i == 2?'#a0f': '#0f0'): '#444'}">
+          <b style="color:${unlocked?'#fff': '#666'}">${s.name}</b><br>
+          <small>${s.desc}</small><br>
+          <small style="color:var(--accent)">Req: ${format(s.req)} Studs</small>
+          </div>`;
         }
+        document.getElementById('spike-list').innerHTML = h;
+      }
 
-        function updateCard(id) {
-            const cost = getCost(id);
-            const card = document.getElementById(`upg-${id}`);
-            if (!card) return;
+      function setNotation(n) {
+        game.notation = n; updateUI();
+      }
+      function save() {
+        localStorage.setItem("flingSave", JSON.stringify(game));
+      }
+      function load() {
+        let s = localStorage.getItem("flingSave");
+        if (!s) return;
+        let d = JSON.parse(s);
 
-            document.getElementById(`cost-${id}`).innerText = (typeof cost === "string") ? cost : "Cost: " + format(cost);
-            
-            let lvl = document.getElementById(`lvl-${id}`);
-            if (id === 'acc' || id === 'vel') lvl.innerText = game[id+"Bought"] ? "1/1" : "0/1";
-            else {
-                let m = (id === 'mult') ? (game.bpUpg1 ? 100 : 30) : (id === 'comp' ? (game.bpUpg1 ? 25 : 15) : (id === 'base' ? 15 : 50));
-                lvl.innerText = game[id+"Lvl"].toNumber() + "/" + m;
-            }
+        game.studs = EN(d.studs || 0);
+        game.totalStuds = EN(d.totalStuds || 0);
+        game.baseLvl = EN(d.baseLvl || 0);
+        game.multLvl = EN(d.multLvl || 0);
+        game.compLvl = EN(d.compLvl || 0);
+        game.weakLvl = EN(d.weakLvl || 0);
+        game.baseplates = EN(d.baseplates || 0);
 
-            let canAfford = (cost === "Free") || (typeof cost !== "string" && game.studs.gte(cost));
-            card.classList.toggle('disabled', !canAfford || cost === "Maxed" || cost === "Bought");
+        game.spike = d.spike || 0;
+        game.accBought = d.accBought || false;
+        game.velBought = d.velBought || false;
+        game.bpUpg1 = d.bpUpg1 || false;
+        game.bpUpg2 = d.bpUpg2 || false;
+        game.bpUpg3 = d.bpUpg3 || false;
+        game.bpUpg4 = d.bpUpg4 || false;
+        game.bpUpg5 = d.bpUpg5 || false;
+
+        game.playTime = d.playTime || 0;
+        game.notation = d.notation || "Default";
+        game.activeTrial = d.activeTrial || null;
+        game.trialCompletions = d.trialCompletions || [false,
+          false,
+          false];
+
+        updateUI();
+      }
+      function hardReset() {
+        if (confirm("Reset everything?")) {
+          localStorage.clear(); location.reload();
         }
+      }
 
-        function buy(id) {
-            let cost = getCost(id);
-            if (cost === "Maxed" || cost === "Bought") return;
-            let p = (cost === "Free") ? EN(0) : cost;
-            if (game.studs.gte(p)) {
-                game.studs = game.studs.sub(p);
-                if (id === 'acc' || id === 'vel') game[id+"Bought"] = true;
-                else game[id+"Lvl"] = game[id+"Lvl"].add(1);
-                updateUI();
-            }
-        }
+      load();
+      updateMilestones();
+      setInterval(() => {
+        let now = Date.now();
+        let diff = (now - game.lastTick) / 1000;
+        let pps = getPPS();
 
-        function buyBP(n) {
-            let costs = [0, 1, 3, 100];
-            if (game.baseplates.gte(costs[n]) && !game['bpUpg'+n]) {
-                game.baseplates = game.baseplates.sub(costs[n]);
-                game['bpUpg'+n] = true;
-                updateUI();
-            }
-        }
+        let gained = pps.mul(diff);
+        game.studs = game.studs.add(gained);
+        game.totalStuds = game.totalStuds.add(gained); // Track total
+        game.playTime += diff; // Track time
 
-        function resetBaseplate(forced = false) {
-    					if (game.activeTrial !== null && !forced) {
-        			alert("You cannot Fling while in a Trial.");
-            let gain = getBaseplateGain();
-            if (gain.lt(1)) return;
-            game.baseplates = game.baseplates.add(gain);
-            game.studs = EN(0); game.spike = 0; game.baseLvl = EN(0);
-            game.multLvl = EN(0); game.compLvl = EN(0); game.weakLvl = EN(0);
-            game.accBought = false; game.velBought = false;
-            showTab('upgrades');
-            updateUI();
-        }
-
-        function updateMilestones() {
-            let h = "";
-            for (let i = 0; i <= Math.min(game.spike, 2); i++) {
-                let s = SPIKES[i];
-                let unlocked = game.spike > i;
-                h += `<div class="milestone-entry" style="border-color: ${unlocked ? (i==2?'#a0f':'#0f0') : '#444'}">
-                    <b style="color:${unlocked?'#fff':'#666'}">${s.name}</b><br>
-                    <small>${s.desc}</small><br>
-                    <small style="color:var(--accent)">Req: ${format(s.req)} Studs</small>
-                </div>`;
-            }
-            document.getElementById('spike-list').innerHTML = h;
-        }
-
-        function setNotation(n) { game.notation = n; updateUI(); }
-        function save() { localStorage.setItem("flingSave", JSON.stringify(game)); }
-		function load() {
-    		let s = localStorage.getItem("flingSave");
-    		if (!s) return;
-    		let d = JSON.parse(s);
-
-    		game.studs = EN(d.studs || 0);
-    		game.totalStuds = EN(d.totalStuds || 0);
-    		game.baseLvl = EN(d.baseLvl || 0);
-    		game.multLvl = EN(d.multLvl || 0);
-    		game.compLvl = EN(d.compLvl || 0);
-    		game.weakLvl = EN(d.weakLvl || 0);
-    		game.baseplates = EN(d.baseplates || 0);
-    
-    		game.spike = d.spike || 0;
-    		game.accBought = d.accBought || false;
-    		game.velBought = d.velBought || false;
-    		game.bpUpg1 = d.bpUpg1 || false;
-    		game.bpUpg2 = d.bpUpg2 || false;
-    		game.bpUpg3 = d.bpUpg3 || false;
-    		game.bpUpg4 = d.bpUpg4 || false;
-    		game.bpUpg5 = d.bpUpg5 || false;
-    
-    		game.playTime = d.playTime || 0;
-    		game.notation = d.notation || "Default";
-    		game.activeTrial = d.activeTrial || null;
-    		game.trialCompletions = d.trialCompletions || [false, false, false];
-    
-    		updateUI();
-		}
-        function hardReset() { if(confirm("Reset everything?")) { localStorage.clear(); location.reload(); } }
-
-        load();
-        updateMilestones();
-        setInterval(() => {
-            let now = Date.now();
-            let diff = (now - game.lastTick) / 1000;
-            let pps = getPPS();
-            
-            let gained = pps.mul(diff);
-            game.studs = game.studs.add(gained);
-            game.totalStuds = game.totalStuds.add(gained); // Track total
-            game.playTime += diff; // Track time
-            
-            game.lastTick = now;
-            updateUI();
-        }, 50);
-        setInterval(save, 10000);
+        game.lastTick = now;
+        updateUI();
+      }, 50);
+      setInterval(save, 10000);
     </script>
-</body>
+  </body>
 </html>
