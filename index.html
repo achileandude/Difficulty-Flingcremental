@@ -67,6 +67,8 @@
         <button onclick="showTab('upgrades')">Studs</button>
         <button id="tab-btn-spikes" class="hidden" onclick="showTab('spikes')">Difficulty Spikes</button>
         <button id="tab-btn-baseplates" class="hidden" onclick="showTab('baseplates')">Baseplates</button>
+				<button id="tab-btn-trials" class="hidden" onclick="showTab('trials')">Trials</button>
+				<button id="tab-btn-stats" onclick="showTab('stats')">Stats</button>
         <button onclick="showTab('settings')">Settings</button>
     </div>
 
@@ -140,46 +142,49 @@
         </div>
     </div>
 
-    <div id="tab-trials" class="tab-content hidden">
-    <h2>Trials</h2>
-    <p v-if="game.activeTrial">Currently in: Trial {{game.activeTrial}}</p>
+<div id="tab-stats" class="tab-content hidden">
+    <h2>Statistics</h2>
+    <div class="ms-box" style="text-align: left;">
+        <p>Total Studs: <span id="stats-total">0</span></p>
+        <p>Time Played: <span id="stats-time">0</span>s</p>
+        <p>Trials Done: <span id="stats-trials">0</span>/3</p>
+    </div>
+</div>
+
+<div id="tab-trials" class="tab-content hidden">
+    <h2 style="color: #ff4444;">TRIALS</h2>
+    <p id="active-trial-text" style="color: #ffa500; font-weight: bold;"></p>
     <div class="grid">
         <div class="card" onclick="enterTrial(1)">
-            <b>Trial 1: Rooting</b><br>
-            <small>Stud gain is Square Rooted.</small><br>
-            Goal: 1.00e50 Studs
+            <b class="u-title">Trial 1: Rooting</b>
+            <span class="u-desc">Stud gain is Square Rooted.</span>
+            <div class="u-stats">Goal: 1.00e50</div>
         </div>
         <div class="card" onclick="enterTrial(2)">
-            <b>Trial 2: Futile</b><br>
-            <small>Baseplate upgrades are disabled.</small><br>
-            Goal: 1.00e25 Studs
+            <b class="u-title">Trial 2: Futile</b>
+            <span class="u-desc">Baseplate upgrades are disabled.</span>
+            <div class="u-stats">Goal: 1.00e25</div>
         </div>
         <div class="card" onclick="enterTrial(3)">
-            <b>Trial 3: Obby Accurate</b><br>
-            <small>Difficulty Spikes give no boost.</small><br>
-            Goal: 1.00e12 Studs
+            <b class="u-title">Trial 3: Obby Accurate</b>
+            <span class="u-desc">Difficulty Spikes give no boost.</span>
+            <div class="u-stats">Goal: 1.00e12</div>
         </div>
     </div>
-    <button onclick="exitTrial()" style="margin-top:20px; background:#a0f; color:white;">Complete/Exit Trial</button>
+    <button onclick="exitTrial()" style="margin-top: 20px; background: #a0f; color: white; padding: 15px;">Finish / Abandon Trial</button>
 </div>
 
     <div id="tab-settings" class="tab-content hidden">
         <div class="ms-box" style="width: 300px;">
             <h3>Notations</h3>
-            <button onclick="setNotation('Default')">Default</button>
+            <button onclick="setNotation('Standard')">Default</button>
             <button onclick="setNotation('Scientific')">Scientific</button>
             <button onclick="setNotation('Engineering')">Engineering</button>
+            <button onclick="setNotation('Mixed Scientific')">Mixed Scientific</button>
             <hr style="border: 0.5px solid #333; margin: 20px 0;">
             <button onclick="save()">Manual Save</button>
             <button onclick="hardReset()" style="background: #600;">HARD RESET</button>
         </div>
-    </div>
-
-    <div id="tab-stats" class="tab-content hidden">
-    <h3>Statistics</h3>
-    <p>Total Studs ever advanced: <span id="stats-total">0</span></p>
-    <p>Time played: <span id="stats-time">0</span> seconds</p>
-    <p>Trials Completed: <span id="stats-trials">0</span>/3</p>
     </div>
 
     <script>
@@ -202,9 +207,9 @@
         };
 
         const SPIKES = [
-            { name: "The First Difficulty", req: EN(100), desc: "x3 Studs | Unlocks: Mult & Comp" },
-            { name: "Lower Gap", req: EN(1e4), desc: "x10 Studs | Unlocks: Acc & Vel" },
-            { name: "Negativity", req: EN(3.333e19), desc: "x15 Studs | Unlocks: Baseplates" }
+            { name: "The First Difficulty", req: EN(100), desc: "x3 Stud gain | Unlock 2 Stud upgrades" },
+            { name: "Lower Gap", req: EN(1e4), desc: "x10 Stud gain | Unlock 2 Stud upgrades" },
+            { name: "Negativity", req: EN(3.333e19), desc: "x15 Stud gain | Unlock the first reset. Baseplates." }
         ];
 
         function getPPS() {
@@ -251,7 +256,7 @@
             switch(id) {
                 case 'base':
                     if (game.baseLvl.gte(15)) return "Maxed";
-                    if (game.baseLvl.eq(0)) return "FREE";
+                    if (game.baseLvl.eq(0)) return "Free";
                     return EN(3).mul(EN(1.15).pow(game.baseLvl.sub(1))).ceil();
                 case 'mult':
                     let mCap = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
@@ -283,7 +288,7 @@
 }
 
         function formatStandard(num) {
-        const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Vg"];
+        const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd", "Vg"];
         let e = num.log10().floor().toNumber();
         let idx = Math.floor(e / 3);
         if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
@@ -294,10 +299,10 @@
         let num = EN(n);
         if (num.lt(1000)) return num.toNumber().toFixed(2);
         
-        if (game.notation === "Mixed Scientific") {
-            if (num.lt(1e303)) return formatStandard(num);
-            return num.toExponential(2).replace("e+", "e");
-        }
+ 				if (game.notation === "Mixed Scientific") {
+    			if (num.lt(1e303)) return formatStandard(num); // Standard k, M, B logic
+    			return num.toExponential(2).replace("e+", "e");
+			}
             }
             return num.toExponential(2).replace("e+", "e");
                 if (game.notation === "Engineering") {
@@ -305,7 +310,7 @@
                     let m = num.div(EN(10).pow(Math.floor(e / 3) * 3));
                     return m.toFixed(2) + "e" + (Math.floor(e / 3) * 3);
                 }
-                const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Vg"];
+                const suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd", "Vg"];
                 let e = num.log10().floor().toNumber();
                 let idx = Math.floor(e / 3);
                 if (idx < suffixes.length) return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
@@ -368,24 +373,28 @@
             updateStatsTab();
         }
 
-        function enterTrial(idx) {
+function enterTrial(n) {
     if (game.activeTrial !== null) return;
-    if (confirm("Enter Trial? This will perform a Baseplate Reset!")) {
-        game.activeTrial = idx;
-        resetBaseplate(true); // Forced reset
+    if (confirm("Enter Trial " + n + "? (Forced Reset)")) {
+        game.activeTrial = n;
+        resetBaseplate(true); // pass 'true' to skip the confirmation inside reset
     }
 }
 
 function exitTrial() {
-    // Check for goal
     const goals = [null, EN(1e50), EN(1e25), EN(1e12)];
-    if (game.studs.gte(goals[game.activeTrial])) {
+    if (game.activeTrial && game.studs.gte(goals[game.activeTrial])) {
         game.trialCompletions[game.activeTrial - 1] = true;
-        alert("Trial Complete!");
+        alert("Trial " + game.activeTrial + " Complete!");
     }
     game.activeTrial = null;
     resetBaseplate(true);
 }
+
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + id).classList.remove('hidden');
+        }
 
         function updateCard(id) {
             const cost = getCost(id);
@@ -401,14 +410,14 @@ function exitTrial() {
                 lvl.innerText = game[id+"Lvl"].toNumber() + "/" + m;
             }
 
-            let canAfford = (cost === "FREE") || (typeof cost !== "string" && game.studs.gte(cost));
-            card.classList.toggle('disabled', !canAfford || cost === "Maxed" || cost === "BOUGHT");
+            let canAfford = (cost === "Free") || (typeof cost !== "string" && game.studs.gte(cost));
+            card.classList.toggle('disabled', !canAfford || cost === "Maxed" || cost === "Bought");
         }
 
         function buy(id) {
             let cost = getCost(id);
-            if (cost === "Maxed" || cost === "BOUGHT") return;
-            let p = (cost === "FREE") ? EN(0) : cost;
+            if (cost === "Maxed" || cost === "Bought") return;
+            let p = (cost === "Free") ? EN(0) : cost;
             if (game.studs.gte(p)) {
                 game.studs = game.studs.sub(p);
                 if (id === 'acc' || id === 'vel') game[id+"Bought"] = true;
@@ -426,7 +435,9 @@ function exitTrial() {
             }
         }
 
-        function resetBaseplate() {
+        function resetBaseplate(forced = false) {
+    					if (game.activeTrial !== null && !forced) {
+        			alert("You cannot Fling while in a Trial.");
             let gain = getBaseplateGain();
             if (gain.lt(1)) return;
             game.baseplates = game.baseplates.add(gain);
@@ -451,40 +462,37 @@ function exitTrial() {
             document.getElementById('spike-list').innerHTML = h;
         }
 
-        function showTab(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + id).classList.remove('hidden');
-        }
-
         function setNotation(n) { game.notation = n; updateUI(); }
         function save() { localStorage.setItem("flingSave", JSON.stringify(game)); }
-        function load() {
-            let s = localStorage.getItem("flingSave");
-            if (!s) return;
-            let d = JSON.parse(s);
+		function load() {
+    		let s = localStorage.getItem("flingSave");
+    		if (!s) return;
+    		let d = JSON.parse(s);
 
-            // List of all EN variables to backfill
-            const enVars = ["studs", "baseLvl", "multLvl", "compLvl", "weakLvl", "baseplates", "totalStuds"];
-            enVars.forEach(k => {
-                game[k] = d[k] ? EN(d[k]) : EN(0);
-            });
-
-            // Backfill standard variables
-            game.spike = d.spike ?? 0;
-            game.accBought = d.accBought ?? false;
-            game.velBought = d.velBought ?? false;
-            game.bpUpg1 = d.bpUpg1 ?? false;
-            game.bpUpg2 = d.bpUpg2 ?? false;
-            game.bpUpg3 = d.bpUpg3 ?? false;
-            game.bpUpg4 = d.bpUpg4 ?? false; // New
-            game.bpUpg5 = d.bpUpg5 ?? false; // New
-            game.notation = d.notation ?? "Default";
-            game.playTime = d.playTime ?? 0; // New
-            game.activeTrial = d.activeTrial ?? null; // New
-            game.trialCompletions = d.trialCompletions ?? [false, false, false]; // New
-            
-            updateUI();
-        }
+    		game.studs = EN(d.studs || 0);
+    		game.totalStuds = EN(d.totalStuds || 0);
+    		game.baseLvl = EN(d.baseLvl || 0);
+    		game.multLvl = EN(d.multLvl || 0);
+    		game.compLvl = EN(d.compLvl || 0);
+    		game.weakLvl = EN(d.weakLvl || 0);
+    		game.baseplates = EN(d.baseplates || 0);
+    
+    		game.spike = d.spike || 0;
+    		game.accBought = d.accBought || false;
+    		game.velBought = d.velBought || false;
+    		game.bpUpg1 = d.bpUpg1 || false;
+    		game.bpUpg2 = d.bpUpg2 || false;
+    		game.bpUpg3 = d.bpUpg3 || false;
+    		game.bpUpg4 = d.bpUpg4 || false;
+    		game.bpUpg5 = d.bpUpg5 || false;
+    
+    		game.playTime = d.playTime || 0;
+    		game.notation = d.notation || "Default";
+    		game.activeTrial = d.activeTrial || null;
+    		game.trialCompletions = d.trialCompletions || [false, false, false];
+    
+    		updateUI();
+		}
         function hardReset() { if(confirm("Reset everything?")) { localStorage.clear(); location.reload(); } }
 
         load();
