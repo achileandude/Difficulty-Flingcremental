@@ -647,11 +647,11 @@
       let cost = getCost(id);
 
       // Safety check: cost could be a string "Maxed" or "BOUGHT"
-      if (cost === "Maxed" || cost === "BOUGHT" || cost === "FREE") {
-        if (cost !== "FREE") return; // Exit if maxed
+      if (cost === "Maxed" || cost === "Bought" || cost === "Free") {
+        if (cost !== "Free") return; // Exit if maxed
       }
 
-      let price = (cost === "FREE") ? EN(0): cost;
+      let price = (cost === "Free") ? EN(0): cost;
 
       if (game.studs.gte(price)) {
         game.studs = game.studs.sub(price);
