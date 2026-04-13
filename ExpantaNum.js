@@ -13,7 +13,7 @@
     // 1000 means there are at maximum of 1000 elements in array.
     // It is not recommended to make this number too big.
     // `ExpantaNum.maxOps = 1000;`
-    maxOps: 1e3,
+    maxOps: 1e4,
 
     // Specify what format is used when serializing for JSON.stringify
     //
@@ -27,7 +27,7 @@
     // NONE   0 Show no information.
     // NORMAL 1 Show operations.
     // ALL    2 Show everything.
-    debug: 0
+    debug: 2
   },
 
 
