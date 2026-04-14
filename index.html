@@ -134,10 +134,19 @@
         cursor: not-allowed;
         filter: grayscale(1);
       }
-      .bp-card {
-        border-color: #4b0082;
-        background: #0a0510;
-      }
+.bp-card {
+    background-color: #222 !important;
+    background-image: url('https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/a/a/2/aa246b67979474bc9a9fde6ccd722dfb5215baa6.png') !important;
+    background-size: 64px; /* Makes the stud texture look better on small screens */
+    background-repeat: repeat;
+    background-blend-mode: overlay;
+    border: 2px solid #555 !important;
+    filter: grayscale(100%); /* Force that gray look */
+}
+
+#tab-baseplates h2 {
+    color: #888; /* Gray display */
+}
 
       .u-title {
         font-size: 1.2em;
