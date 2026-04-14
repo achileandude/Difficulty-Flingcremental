@@ -562,7 +562,7 @@
         return gain.floor().max(1);
       }
 
-      function formatSuffix(num) {
+      function formatStandard(num) {
         if (num.lt(1e3)) return num.toFixed(2);
         const suffixes = [
           "",
