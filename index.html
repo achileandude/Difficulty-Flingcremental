@@ -502,6 +502,12 @@ name: "Negativity",
 req: EN(3.333e19),
 desc: "x15 Stud gain | Unlock the first reset. Baseplates.",
 },
+{
+name: "Unimpossible",
+req: EN("1e261"),
+desc: "x1M and ^1.025 Stud gain | Unlock the Upgrade Tree."
+},
+];
 ];
 
 function getPPS() {
@@ -514,6 +520,7 @@ if (game.activeTrial === 3) {
 if (game.spike >= 1) p = p.mul(3);
 if (game.spike >= 2) p = p.mul(10);
 if (game.spike >= 3) p = p.mul(15);
+if (game.spike >= 4) p = p.mul(1e6); p.pow(1.025);
 }
 
 // --- UPGRADES ---
@@ -929,7 +936,7 @@ game.totalStuds = game.totalStuds.add(gained);
 game.playTime += diff;
 game.lastTick = now;
 if (game.activeTrial !== null) {
-const goals = [EN("1e50"), EN("1e25"), EN("1e12")];
+const goals = [EN("1e50"), EN("1e65"), EN("1e85")];
 if (game.studs.gte(goals[game.activeTrial - 1])) {
 game.trialCompletions[game.activeTrial - 1] = true;
 game.activeTrial = null;
