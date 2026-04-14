@@ -227,6 +227,26 @@ margin-bottom: 10px;
 border-left: 5px solid #444;
 text-align: left;
 }
+
+.tree-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+padding: 20px;
+}
+
+#tab-tree .card {
+border: 2px solid #0ff;
+background: #001111;
+box-shadow: 0 0 10px #0ff5;
+}
+
+#tab-tree .bp-card {
+border: 2px solid #aaa;
+background: #111;
+box-shadow: 0 0 10px #fff2;
+}
+
 </style>
 </head>
 <body>
@@ -444,6 +464,24 @@ ABANDON TRIAL (Emergency Reset)
 </button>
 </div>
 
+<div id="tab-tree" class="tab-content hidden">
+<h2 style="color: #0ff;">The Upgrade Tree</h2>
+<div class="tree-grid">
+<button class="card" onclick="buyTree(0)">
+<b>S1: Foundation</b><br>x1e20 Studs<br>Cost: 1e270 Studs
+</button>
+<button class="card bp-card" onclick="buyTree(1)">
+<b>BP1: Pressurized</b><br>+5% BP Gain<br>Cost: 1e45 Baseplates
+</button>
+<button class="card" onclick="buyTree(2)">
+<b>S2: Recursive</b><br>Studs boost themselves<br>Cost: 1e315 Studs
+</button>
+<button class="card bp-card" onclick="buyTree(3)">
+<b>BP2: Efficiency</b><br>Cheaper Stud Upgrades<br>Cost: 1e25 Baseplates
+</button>
+</div>
+</div>
+
 <div id="tab-settings" class="tab-content hidden">
 <div class="ms-box" style="width: 300px">
 <h3>Notations</h3>
@@ -521,7 +559,7 @@ if (game.activeTrial === 3) {
 if (game.spike >= 1) p = p.mul(3);
 if (game.spike >= 2) p = p.mul(10);
 if (game.spike >= 3) p = p.mul(15);
-if (game.spike >= 4) p = p.mul(1e6); p.pow(1.025);
+if (game.spike >= 4) p = p.mul(1e6).p.pow(1.025);
 }
 
 // --- UPGRADES ---
@@ -556,7 +594,33 @@ if (game.trialCompletions[2]) p = p.mul(1e6);
 
 if (game.activeTrial === 1) p = p.sqrt();
 
+if (game.tree[0]) p = p.mul(1e20); // S1: Flat boost
+if (game.tree[4].gt(0)) p = p.mul(EN(10).pow(game.tree[4])); // S3: Leveling boost
+
 return p;
+}
+
+function buyTree(index) {
+const costs = [
+{ c: EN("1e270"), cur: "studs", type: "once" },
+{ c: EN("1e45"), cur: "baseplates", type: "once" },
+{ c: EN("1e315"), cur: "studs", type: "level" },
+// ... add the rest here
+];
+
+let item = costs[index];
+let currency = game[item.cur];
+
+if (currency.gte(item.c)) {
+if (item.type === "once" && !game.tree[index]) {
+game[item.cur] = game[item.cur].sub(item.c);
+game.tree[index] = true;
+} else if (item.type === "level") {
+game[item.cur] = game[item.cur].sub(item.c);
+game.tree[index] = game.tree[index].add(1);
+}
+updateUI();
+}
 }
 
 function getCost(id) {
