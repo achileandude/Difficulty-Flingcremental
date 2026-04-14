@@ -571,52 +571,33 @@
         return gain.floor().max(1);
       }
 
-      function formatStandard(num) {
-        if (num.lt(1e3)) return num.toFixed(2);
-        const suffixes = [
-          "",
-          "k",
-          "M",
-          "B",
-          "T",
-          "Qa",
-          "Qi",
-          "Sx",
-          "Sp",
-          "Oc",
-          "No",
-          "De",
-          "UDe",
-          "DDe",
-          "TDe",
-          "QaDe",
-          "QnDe",
-          "SxDe",
-          "SDe",
-          "OcDe",
-          "NoDe",
-          "Vg",
-          "UVg",
-          "DVg",
-          "TVg",
-          "QdVg",
-          "QnVg",
-          "SxVg",
-          "SpVg",
-          "OcVg",
-          "NoVg",
-          "Tg",
-          "UTg",
-          "DTg",
-        ];
-        // Note: To reach 1e303 (Centillion), you'd need ~101 suffixes.
-        // For brevity, we use a loop-based suffix generator or scientific for the extreme high end.
-        let e = num.log10().floor().toNumber();
-        let idx = Math.floor(e / 3);
-        if (idx < suffixes.length)
-          return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
-        return num.toExponential(2).replace("e+", "e");
-      }
+function formatStandard(num) {
+    if (num.lt(1000)) return num.toFixed(2);
+    
+    const suffixes = [
+        "", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+        "Dc", "Ud", "Dd", "Td", "Qd", "qd", "Sd", "sd", "Od", "Nd",
+        "Vg", "Uv", "Dv", "Tv", "Qv", "qv", "Sv", "sv", "Ov", "Nv",
+        "Tg", "Ut", "Dt", "Tt", "Qt", "qt", "St", "st", "Ot", "Nt",
+        "Qg", "Uq", "Dq", "Tq", "Qq", "qq", "Sq", "sq", "Oq", "Nq",
+        "Sg", "Us", "Ds", "Ts", "Qs", "qs", "Ss", "ss", "Os", "Ns",
+        "Spg", "Usg", "Dsg", "Tsg", "Qsg", "qsg", "Ssg", "ssg", "Osg", "Nsg",
+        "Og", "Uo", "Do", "To", "Qo", "qo", "So", "so", "Oo", "No",
+        "Ng", "Un", "Dn", "Tn", "Qn", "qn", "Sn", "sn", "On", "Nn",
+        "Ct" // Centillion at 1e303
+    ];
+
+    let e = num.log10().floor().toNumber();
+    let idx = Math.floor(e / 3);
+    
+    if (idx < suffixes.length) {
+        return num.div(EN(10).pow(idx * 3)).toFixed(2) + suffixes[idx];
+    }
+    
+    // If you go BEYOND Centillion, switch to Level 2 (1e3M style)
+    return "1e" + formatStandard(num.log10());
+}
+
 
 function format(n) {
     let num = EN(n);
@@ -718,12 +699,20 @@ function format(n) {
             ? "UNRANKED"
             : SPIKES[Math.min(game.spike - 1, 2)].name;
         t.className = `tier-display tier-${Math.min(game.spike, 2)}`;
-        const trialText = document.getElementById("active-trial-text");
-        if (trialText) {
-          trialText.innerText = game.activeTrial
-            ? "CURRENTLY IN TRIAL " + game.activeTrial
-            : "Not currently in a Trial";
-        }
+const trialText = document.getElementById('active-trial-text');
+if (trialText) {
+    // Check if it's a valid trial number (1, 2, or 3)
+    if (game.activeTrial >= 1 && game.activeTrial <= 3) {
+        trialText.innerText = "CURRENTLY IN TRIAL " + game.activeTrial;
+        trialText.style.display = "block";
+    } else {
+        // If it's -1, null, or 0, clear it
+        game.activeTrial = null; 
+        trialText.innerText = "";
+        trialText.style.display = "none";
+    }
+}
+
 
         updateStatsTab();
       }
