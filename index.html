@@ -362,7 +362,7 @@
             (Scaling gets harsher above level 50).</span
           >
           <div class="u-stats">
-            <span id="bp-lvl-4">0/1</span><span class="u-cost">500M BP</span>
+            <span id="bp-lvl-4">0/1</span><span class="u-cost">50M BP</span>
           </div>
         </div>
         <div class="card bp-card" id="bp-upg-5" onclick="buyBP(5)">
@@ -450,7 +450,7 @@
         bpUpg5: false,
         activeTrial: null,
         trialCompletions: [false, false, false],
-        notation: "Default",
+        notation: "Mixed Scientific",
         lastTick: Date.now(),
       };
 
@@ -461,7 +461,7 @@
           desc: "x3 Stud gain | Unlock 2 Stud upgrades",
         },
         {
-          name: "Lower Gap",
+          name: "The Lower Gap",
           req: EN(1e4),
           desc: "x10 Stud gain | Unlock 2 Stud upgrades",
         },
@@ -576,18 +576,29 @@
           "Sp",
           "Oc",
           "No",
-          "Dc",
-          "Ud",
-          "Dd",
-          "Td",
-          "Qd",
-          "qd",
-          "Sd",
-          "sd",
-          "Od",
-          "Nd",
+          "De",
+          "UDe",
+          "DDe",
+          "TDe",
+          "QaDe",
+          "QnDe",
+          "SxDe",
+          "SDe",
+          "OcDe",
+          "NoDe",
           "Vg",
-          "Ct",
+          "UVg",
+          "DVg",
+          "TVg",
+          "QdVg",
+          "QnVg",
+          "SxVg",
+          "SpVg",
+          "OcVg",
+          "NoVg",
+          "Tg",
+          "UTg",
+          "DTg",
         ];
         // Note: To reach 1e303 (Centillion), you'd need ~101 suffixes.
         // For brevity, we use a loop-based suffix generator or scientific for the extreme high end.
@@ -682,7 +693,7 @@
           updateCard(id),
         );
         [1, 2, 3, 4, 5].forEach((i) => {
-          let costs = [0, 1, 3, 100, 5e8, 1e18];
+          let costs = [0, 1, 3, 100, 5e7, 1e18];
           let card = document.getElementById("bp-upg-" + i);
           if (card) {
             card.classList.toggle(
