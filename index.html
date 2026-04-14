@@ -609,32 +609,30 @@
         return num.toExponential(2).replace("e+", "e");
       }
 
-      function format(n) {
-        let num = EN(n);
-        if (num.lt(1000)) return num.toNumber().toFixed(2);
+function format(n) {
+    let num = EN(n);
+    if (num.lt(1000)) return num.toNumber().toFixed(2);
 
-        if (game.notation !== "Default") {
-          return num.toString(game.notation.toLowerCase().replace(" ", ""));
-        }
+    // Level 3: ee scale (1ee100 -> 1ee100, 1ee3003 -> 1ee3k)
+    if (num.gte("1e1e1000")) {
+        let doubleLog = num.log10().log10();
+        return "1ee" + formatStandard(doubleLog);
+    }
 
-        // 1. Extreme Scale: 1ee3003 -> 1ee3k
-        if (num.gte("1e1e1000")) {
-          return "1ee" + formatSuffix(num.log10().log10());
-        }
+    // Level 2: High e scale (1e3000003 -> 1e3M)
+    if (num.gte("1e1000000")) {
+        let singleLog = num.log10();
+        return "1e" + formatStandard(singleLog);
+    }
 
-        // 2. High Scale: 1e3000003 -> 1e3M
-        if (num.gte("1e1000000")) {
-          return "1e" + formatSuffix(num.log10());
-        }
+    // Level 1: Mixed Scientific (Standard until 1e303, then Scientific)
+    if (num.lt("1e303")) {
+        return formatStandard(num);
+    } else {
+        return num.toExponential(2).replace("e+", "e");
+    }
+}
 
-        // 3. Mixed Scientific / Standard up to 1e303
-        if (num.lt("1e303")) {
-          return formatSuffix(num);
-        } else {
-          // Scientific for the gap between 1e303 and 1e1,000,000
-          return num.toExponential(2).replace("e+", "e");
-        }
-      }
 
       function updateStatsTab() {
         const totalEl = document.getElementById("stats-total");
