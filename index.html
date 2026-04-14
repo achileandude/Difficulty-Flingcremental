@@ -529,40 +529,44 @@
         return p;
       }
 
-      function getCost(id) {
-        switch (id) {
-          case "base":
+function getCost(id) {
+    switch (id) {
+        case 'base':
             if (game.baseLvl.gte(15)) return "Maxed";
             if (game.baseLvl.eq(0)) return "Free";
-            return EN(3)
-              .mul(EN(1.15).pow(game.baseLvl.sub(1)))
-              .ceil();
-          case "mult":
-            let mCap =
-              30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
+            return EN(3).mul(EN(1.15).pow(game.baseLvl.sub(1))).ceil();
+        case 'mult':
+            let mCap = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
             if (game.multLvl.gte(mCap)) return "Maxed";
             let mCost = EN(150).mul(EN(1.4).pow(game.multLvl));
             if (game.multLvl.gte(100)) mCost = mCost.pow(2);
             return mCost.ceil();
-          case "comp":
+        case 'comp':
             let cCap = game.bpUpg1 ? 25 : 15;
             if (game.compLvl.gte(cCap)) return "Maxed";
-            let cBase =
-              (game.bpUpg1 ? 3.5 : 3.0) +
-              Math.floor(game.compLvl.toNumber() / 5);
-            let cCost = EN(2500).mul(EN(cBase).pow(game.compLvl));
-            if (game.compLvl.gte(15)) cCost = cCost.pow(1.5);
+            let cCost = EN(2500).mul(EN(3.5).pow(game.compLvl));
             return cCost.ceil();
-          case "weak":
+        
+        // --- THE MISSING PIECES ---
+        case 'acc':
+            if (game.accBought) return "Bought";
+            return EN(1e14); // 100 Trillion Studs
+        case 'vel':
+            if (game.velBought) return "Bought";
+            return EN(1e16); // 10 Quadrillion Studs
+        case 'weak':
             let wCap = 50 + (game.bpUpg4 ? 25 : 0);
             if (game.weakLvl.gte(wCap)) return "Maxed";
             let wCost = EN(1e45).mul(EN(1.7).pow(game.weakLvl));
             if (game.weakLvl.gte(50)) wCost = wCost.pow(1.8);
             return wCost.ceil();
-          default:
-            return EN(0);
-        }
-      }
+
+        // Safety fallback so it never shows 0.00 again
+        default:
+            return "Locked"; 
+    }
+}
+
 
       function getBaseplateGain() {
         if (game.studs.lt(5e20)) return EN(0);
