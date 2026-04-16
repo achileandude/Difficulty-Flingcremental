@@ -261,14 +261,14 @@ You have advanced <span id="stud-display">0</span> Studs.
 </div>
 
 <div class="tabs-nav">
-    <button onclick="showTab('upgrades')">Studs</button>
-    <button id="tab-btn-spikes" class="hidden" onclick="showTab('spikes')">Difficulty Spikes</button>
-    <button id="tab-btn-baseplates" class="hidden" onclick="showTab('baseplates')">Baseplates</button>
-    <button id="tab-btn-trials" class="hidden" onclick="showTab('trials')">Trials</button>
-    <!-- Added this missing button -->
-    <button id="tab-btn-tree" class="hidden" onclick="showTab('tree')">Tree</button> 
-    <button id="tab-btn-stats" onclick="showTab('stats')">Stats</button>
-    <button onclick="showTab('settings')">Settings</button>
+<button onclick="showTab('upgrades')">Studs</button>
+<button id="tab-btn-spikes" class="hidden" onclick="showTab('spikes')">Difficulty Spikes</button>
+<button id="tab-btn-baseplates" class="hidden" onclick="showTab('baseplates')">Baseplates</button>
+<button id="tab-btn-trials" class="hidden" onclick="showTab('trials')">Trials</button>
+<!-- Added this missing button -->
+<button id="tab-btn-tree" class="hidden" onclick="showTab('tree')">Tree</button>
+<button id="tab-btn-stats" onclick="showTab('stats')">Stats</button>
+<button onclick="showTab('settings')">Settings</button>
 </div>
 
 <div id="ms-container" class="ms-box hidden">
@@ -837,11 +837,13 @@ function updateCard(id) {
 const cost = getCost(id);
 const card = document.getElementById(`upg-${id}`);
 if (!card) return;
+
 document.getElementById(`cost-${id}`).innerText =
 typeof cost === "string" ? cost: "Cost: " + format(cost);
+
 let lvl = document.getElementById(`lvl-${id}`);
-if (id === "acc" || id === "vel")
-lvl.innerText = game[id + "Bought"] ? "1/1": "0/1";
+if (id === "acc" || id === "vel") {
+if (lvl) lvl.innerText = game[id + "Bought"] ? "1/1": "0/1";
 } else {
 let m = 0;
 if (id === "mult") m = 30 + (game.bpUpg1 ? 70: 0) + (game.trialCompletions[1] ? 25: 0);
@@ -849,8 +851,13 @@ else if (id === "comp") m = game.bpUpg1 ? 25: 15;
 else if (id === "weak") m = 50 + (game.bpUpg4 ? 25: 0);
 else if (id === "base") m = 15;
 
-if (lvl) lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m; // This line was missing!
+if (lvl) lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m;
 }
+
+let canAfford = cost === "Free" || (typeof cost !== "string" && game.studs.gte(cost));
+card.classList.toggle("disabled", !canAfford || cost === "Maxed" || cost === "Bought");
+}
+
 let canAfford =
 cost === "Free" || (typeof cost !== "string" && game.studs.gte(cost));
 card.classList.toggle(
@@ -987,26 +994,26 @@ location.reload();
 load();
 updateMilestones();
 setInterval(() => {
-    let now = Date.now();
-    let diff = (now - game.lastTick) / 1000;
-    let pps = getPPS();
-    let gained = pps.mul(diff);
-    game.studs = game.studs.add(gained);
-    game.totalStuds = game.totalStuds.add(gained);
-    game.playTime += diff;
-    game.lastTick = now;
+let now = Date.now();
+let diff = (now - game.lastTick) / 1000;
+let pps = getPPS();
+let gained = pps.mul(diff);
+game.studs = game.studs.add(gained);
+game.totalStuds = game.totalStuds.add(gained);
+game.playTime += diff;
+game.lastTick = now;
 
-    if (game.activeTrial !== null) {
-        const goals = [EN("1e50"), EN("1e65"), EN("1e85")];
-        if (game.studs.gte(goals[game.activeTrial - 1])) {
-            let tNum = game.activeTrial;
-            game.trialCompletions[tNum - 1] = true;
-            game.activeTrial = null;
-            alert("Trial " + tNum + " completed!");
-            resetBaseplate(true);
-        }
-    }
-    updateUI();
+if (game.activeTrial !== null) {
+const goals = [EN("1e50"), EN("1e65"), EN("1e85")];
+if (game.studs.gte(goals[game.activeTrial - 1])) {
+let tNum = game.activeTrial;
+game.trialCompletions[tNum - 1] = true;
+game.activeTrial = null;
+alert("Trial " + tNum + " completed!");
+resetBaseplate(true);
+}
+}
+updateUI();
 }, 50);
 setInterval(save, 5000);
 </script>
