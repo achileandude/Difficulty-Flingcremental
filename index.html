@@ -848,15 +848,14 @@ typeof cost === "string" ? cost: "Cost: " + format(cost);
 let lvl = document.getElementById(`lvl-${id}`);
 if (id === "acc" || id === "vel")
 lvl.innerText = game[id + "Bought"] ? "1/1": "0/1";
-else {
-let m;
-if (id === "mult")
-m =
-30 + (game.bpUpg1 ? 70: 0) + (game.trialCompletions[1] ? 25: 0);
-else if (id === "comp") m = game.bpUpg1 ? 25: 15;
-else if (id === "weak") m = 50 + (game.bpUpg4 ? 25: 0);
-else if (id === "base") m = 15;
-else m = 1; // For acc/vel, but they're handled separately
+} else {
+    let m = 0;
+    if (id === "mult") m = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
+    else if (id === "comp") m = game.bpUpg1 ? 25 : 15;
+    else if (id === "weak") m = 50 + (game.bpUpg4 ? 25 : 0);
+    else if (id === "base") m = 15;
+    
+    if (lvl) lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m; // This line was missing!
 }
 let canAfford =
 cost === "Free" || (typeof cost !== "string" && game.studs.gte(cost));
