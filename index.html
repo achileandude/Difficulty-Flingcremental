@@ -742,6 +742,9 @@ if (game.spike >= 3)
 document
 .getElementById("tab-btn-baseplates")
 .classList.remove("hidden");
+if (game.spike >= 4) {
+document.getElementById("tab-btn-tree").classList.remove("hidden");
+}
 let next = SPIKES[game.spike];
 if (next) {
 document.getElementById("ms-container").classList.remove("hidden");
@@ -863,7 +866,7 @@ card.classList.toggle(
 "disabled",
 !canAfford || cost === "Maxed" || cost === "Bought",
 );
-}
+
 
 function buy(id) {
 let cost = getCost(id);
