@@ -987,28 +987,27 @@ location.reload();
 load();
 updateMilestones();
 setInterval(() => {
-let now = Date.now();
-let diff = (now - game.lastTick) / 1000;
-let pps = getPPS();
-let gained = pps.mul(diff);
-game.studs = game.studs.add(gained);
-game.totalStuds = game.totalStuds.add(gained);
-game.playTime += diff;
-game.lastTick = now;
-if (game.activeTrial !== null) {
-const goals = [EN("1e50"), EN("1e65"), EN("1e85")];
-if (game.studs.gte(goals[game.activeTrial - 1])) {
-let tNum = game.activeTrial; // Save the number first
-game.trialCompletions[tNum - 1] = true;
-game.activeTrial = null
-game.tree = d.tree ? d.tree.map((v, i) => (i % 2 === 1) ? EN(v): v): [...defaultTree];
-alert("Trial " + tNum + " completed!");
-resetBaseplate(true); // Force a reset so they don't keep the trial stats
-}
-updateUI();
-}
-}
-updateUI();, 50);
+    let now = Date.now();
+    let diff = (now - game.lastTick) / 1000;
+    let pps = getPPS();
+    let gained = pps.mul(diff);
+    game.studs = game.studs.add(gained);
+    game.totalStuds = game.totalStuds.add(gained);
+    game.playTime += diff;
+    game.lastTick = now;
+
+    if (game.activeTrial !== null) {
+        const goals = [EN("1e50"), EN("1e65"), EN("1e85")];
+        if (game.studs.gte(goals[game.activeTrial - 1])) {
+            let tNum = game.activeTrial;
+            game.trialCompletions[tNum - 1] = true;
+            game.activeTrial = null;
+            alert("Trial " + tNum + " completed!");
+            resetBaseplate(true);
+        }
+    }
+    updateUI();
+}, 50);
 setInterval(save, 5000);
 </script>
 </body>
