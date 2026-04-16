@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Difficulty Flingcremental</title>
 <script src="https://cdn.jsdelivr.net/gh/Naruyoko/ExpantaNum.js@master/ExpantaNum.js"></script>
@@ -849,13 +849,13 @@ let lvl = document.getElementById(`lvl-${id}`);
 if (id === "acc" || id === "vel")
 lvl.innerText = game[id + "Bought"] ? "1/1": "0/1";
 } else {
-    let m = 0;
-    if (id === "mult") m = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
-    else if (id === "comp") m = game.bpUpg1 ? 25 : 15;
-    else if (id === "weak") m = 50 + (game.bpUpg4 ? 25 : 0);
-    else if (id === "base") m = 15;
-    
-    if (lvl) lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m; // This line was missing!
+let m = 0;
+if (id === "mult") m = 30 + (game.bpUpg1 ? 70: 0) + (game.trialCompletions[1] ? 25: 0);
+else if (id === "comp") m = game.bpUpg1 ? 25: 15;
+else if (id === "weak") m = 50 + (game.bpUpg4 ? 25: 0);
+else if (id === "base") m = 15;
+
+if (lvl) lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m; // This line was missing!
 }
 let canAfford =
 cost === "Free" || (typeof cost !== "string" && game.studs.gte(cost));
@@ -943,7 +943,8 @@ h += `<div class="milestone-entry" style="border-color: ${unlocked ? (i == 2 ? "
 <b style="color:${unlocked ? "#fff": "#666"}">${s.name}</b><br>
 <small>${s.desc}</small><br>
 <small style="color:var(--accent)">Req: ${format(s.req)} Studs</small>
-</div>`;
+</div>
+`;
 }
 document.getElementById("spike-list").innerHTML = h;
 }
@@ -1003,9 +1004,12 @@ game.lastTick = now;
 if (game.activeTrial !== null) {
 const goals = [EN("1e50"), EN("1e65"), EN("1e85")];
 if (game.studs.gte(goals[game.activeTrial - 1])) {
-game.trialCompletions[game.activeTrial - 1] = true;
+let tNum = game.activeTrial; // Save the number first
+game.trialCompletions[tNum - 1] = true;
 game.activeTrial = null;
-alert("Trial " + game.activeTrial + " completed!");
+alert("Trial " + tNum + " completed!");
+resetBaseplate(true); // Force a reset so they don't keep the trial stats
+}
 updateUI();
 }
 }
