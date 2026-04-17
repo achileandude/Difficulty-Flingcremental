@@ -5,92 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Difficulty Flingcremental</title>
     <script src="https://cdn.jsdelivr.net/gh/Naruyoko/ExpantaNum.js@master/ExpantaNum.js"></script>
-    <style>
-        :root {
-            --bg: #050508;
-            --panel: #0f0f15;
-            --accent: #00ffcc;
-            --text: #e0e0e0;
-            --border: #1e1e26;
-            --purple: #a0f;
-        }
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            margin: 0;
-        }
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/gh/Naruyoko/ExpantaNum.js@master/ExpantaNum.js"></script>
 
-        h1 { margin: 10px 0; font-weight: 900; }
-        .tier-display {
-            font-weight: 900;
-            font-size: 2.5em;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .tier-locked { background: #444; -webkit-text-fill-color: #444; }
-        .tier-0 { background: linear-gradient(#eee, #444); }
-        .tier-1 { background: linear-gradient(#0f0, #060, #000); }
-        .tier-2 { background: linear-gradient(to bottom, #800080, #4b0082, #000); }
+<script src="js/data.js"></script>
+<script src="js/format.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/main.js"></script>
 
-        .stud-count { font-size: 2.5em; color: #fff; text-align: center; }
-        .pps-display { color: #888; margin-bottom: 20px; }
-
-        .tabs-nav { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
-        button {
-            padding: 10px 20px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            color: var(--text);
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        button:hover { border-color: var(--accent); }
-        .hidden { display: none !important; }
-
-        .ms-box { width: 400px; background: #111; border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 30px; text-align: center; }
-        .ms-bar { width: 100%; height: 12px; background: #000; border-radius: 6px; overflow: hidden; margin-top: 10px; }
-        .ms-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.3s ease-out; }
-
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px; }
-        .card { width: 280px; background: var(--panel); border: 2px solid var(--border); border-radius: 15px; padding: 20px; transition: 0.2s; position: relative; cursor: pointer; }
-        .card:hover:not(.disabled) { border-color: var(--accent); transform: translateY(-2px); }
-        .card.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        
-        .bp-card {
-            background-color: #222 !important;
-            background-image: url('https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/a/a/2/aa246b67979474bc9a9fde6ccd722dfb5215baa6.png') !important;
-            background-size: 64px;
-            background-repeat: repeat;
-            background-blend-mode: overlay;
-            border: 2px solid #555 !important;
-        }
-
-        .u-title { font-size: 1.2em; font-weight: bold; display: block; color: #fff; margin-bottom: 5px; }
-        .u-desc { font-size: 0.85em; color: #aaa; display: block; min-height: 40px; }
-        .u-stats { display: flex; justify-content: space-between; margin-top: 15px; font-weight: bold; }
-        .u-cost { color: #fc0; }
-
-        .reset-btn {
-            background: #333;
-            color: #777;
-            padding: 20px;
-            font-size: 1.2em;
-            width: 300px;
-            margin-bottom: 20px;
-        }
-        .reset-btn.ready { background: var(--purple); color: white; border-color: #fff; cursor: pointer; }
-
-        .milestone-entry { background: #ffffff05; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid #444; text-align: left; }
-        .tree-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; }
-    </style>
 </head>
 <body>
     <div id="tier-name" class="tier-display tier-locked">UNRANKED</div>
