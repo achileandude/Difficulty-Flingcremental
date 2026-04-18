@@ -1,6 +1,4 @@
-/**
- * logic.js - Handles all game calculations and purchasing
- */
+let game = DF / js / game.js;
 
 function getPPS() {
   let p = EN(game.baseLvl);
