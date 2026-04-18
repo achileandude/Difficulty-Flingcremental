@@ -1,5 +1,4 @@
 const EN = (n) => new ExpantaNum(n);
-
 const SPIKES = [
   {
     name: "The First Difficulty",

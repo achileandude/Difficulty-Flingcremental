@@ -1,5 +1,3 @@
-let game = DF / js / game.js;
-
 function getPPS() {
   let p = EN(game.baseLvl);
 
