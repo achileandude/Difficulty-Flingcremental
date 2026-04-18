@@ -43,7 +43,7 @@ function getPPS() {
 
   // --- UPGRADE TREE BOOSTS ---
   if (game.tree[0]) p = p.mul(1e20); // S1
-  if (game.tree[4].gt(0))
+  if (game.tree[4].gte(0))
     p = p.mul(game.studs.add(10).log10().pow(game.tree[4])); // S2: Recursive
 
   // --- TRIAL DEBUFFS ---

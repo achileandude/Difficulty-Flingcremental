@@ -53,9 +53,9 @@ const SPIKES = [
   },
   {
     name: "Unimpossible",
-    req: EN("1e261"),
+    req: EN(1e261),
     desc: "x1M and ^1.025 Stud gain | Unlock the Upgrade Tree.",
   },
 ];
 
-const TRIAL_GOALS = [EN("1e50"), EN("1e75"), EN("1e100")];
+const TRIAL_GOALS = [EN(1e50), EN(1e75), EN(1e100)];
