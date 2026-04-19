@@ -44,6 +44,7 @@ function getPPS() {
 
   // --- TRIAL DEBUFFS ---
   if (game.activeTrial === 1) p = p.sqrt();
+  if (game.activeTrial === 5) p = p.mul(0.99); // Trial 5: -1% per second
 
   return p;
 }
@@ -104,6 +105,12 @@ function buyTree(index) {
     { c: EN("1e45"), cur: "baseplates", type: "once" }, // BP1
     { c: EN("1e315"), cur: "studs", type: "level" }, // S2
     { c: EN("1e60"), cur: "baseplates", type: "level" }, // BP2
+    { c: EN("1e450"), cur: "studs", type: "level" }, // S3
+    { c: EN("1e90"), cur: "baseplates", type: "level" }, // BP3
+    { c: EN("1e600"), cur: "studs", type: "level" }, // S4
+    { c: EN("1e120"), cur: "baseplates", type: "level" }, // BP4
+    { c: EN("1e750"), cur: "studs", type: "level" }, // S5
+    { c: EN("1e150"), cur: "baseplates", type: "level" }, // BP5
   ];
   let item = costs[index];
   if (!item) return;

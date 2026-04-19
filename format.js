@@ -120,6 +120,17 @@ function formatStandard(num) {
 
 function format(n) {
   let num = EN(n);
+
+  if (game.notation === "Scientific") {
+    return num.toExponential(2).replace("e+", "e");
+  } else if (game.notation === "Engineering") {
+    let exp = num.log10().floor().toNumber();
+    let engineeringExp = Math.floor(exp / 3) * 3;
+    let mantissa = num.div(EN(10).pow(engineeringExp));
+    return mantissa.toFixed(2) + "e" + engineeringExp;
+  }
+
+  // Mixed Scientific (default)
   if (num.lt(1000)) return num.toNumber().toFixed(2);
 
   // Level 3: Double Exponent (ee scale) -> 1ee1,000,000

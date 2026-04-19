@@ -74,18 +74,12 @@ function updateUI() {
       if (id === "acc" || id === "vel") {
         lvl.innerText = game[id + "Bought"] ? "1/1" : "0/1";
       } else {
-        let m =
-          id === "mult"
-            ? game.bpUpg1
-              ? 100
-              : 30
-            : id === "comp"
-              ? game.bpUpg1
-                ? 25
-                : 15
-              : id === "base"
-                ? 15
-                : 50;
+        let m = 50; // Default for weak
+        if (id === "base") m = 15;
+        else if (id === "mult")
+          m = 30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
+        else if (id === "comp") m = game.bpUpg1 ? 25 : 15;
+        else if (id === "weak") m = 50 + (game.bpUpg4 ? 25 : 0);
         lvl.innerText = game[id + "Lvl"].toNumber() + "/" + m;
       }
       let canAfford = typeof cost !== "string" && game.studs.gte(cost);
@@ -247,6 +241,11 @@ function hardReset() {
   }
 }
 
+function setNotation(n) {
+  game.notation = n;
+  updateUI();
+}
+
 // Global ShowTab
 function showTab(id) {
   document
@@ -265,6 +264,13 @@ function gameLoop() {
     game.totalStuds = game.totalStuds.add(gained);
     game.playTime += diff;
     game.lastTick = now;
+
+    // Trial 4: Cap at 1e100
+    if (game.activeTrial === 4) {
+      if (game.studs.gt(EN(1e100))) {
+        game.studs = EN(1e100);
+      }
+    }
 
     // Check for trial completion
     if (game.activeTrial) {

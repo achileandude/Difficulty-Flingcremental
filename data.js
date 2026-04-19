@@ -23,7 +23,7 @@ let game = {
 
   // Trials
   activeTrial: null,
-  trialCompletions: [false, false, false],
+  trialCompletions: [false, false, false, false, false],
 
   // The Upgrade Tree: [S1, BP1, S2, BP2, S3, BP3, S4, BP4, S5, BP5]
   // S/BP pairs: One-time upgrade, then leveling version
@@ -52,9 +52,9 @@ const SPIKES = [
   },
   {
     name: "Unimpossible",
-    req: EN(1e261),
+    req: EN(1e225),
     desc: "x1M and ^1.025 Stud gain | Unlock the Upgrade Tree.",
   },
 ];
 
-const TRIAL_GOALS = [EN(1e50), EN(1e75), EN(1e100)];
+const TRIAL_GOALS = [EN(1e50), EN(1e75), EN(1e100), EN(1e150), EN(1e200)];
