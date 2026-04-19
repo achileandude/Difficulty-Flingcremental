@@ -100,37 +100,38 @@ function showTab(id) {
   document.getElementById("tab-" + id).classList.remove("hidden");
 }
 
-// Initial Run
-load();
-let s = localStorage.getItem("flingcrementalSave");
-let d = JSON.parse(s);
-setInterval(() => {
-  let now = Date.now();
-  let diff = (now - game.lastTick) / 1000;
-  let gained = getPPS().mul(diff);
-  game.studs = game.studs.add(gained);
-  game.totalStuds = game.totalStuds.add(gained);
-  game.playTime += diff;
-  game.lastTick = now;
+function loading() {
+  load();
+  let s = localStorage.getItem("flingcrementalSave");
+  let d = JSON.parse(s);
+  setInterval(() => {
+    let now = Date.now();
+    let diff = (now - game.lastTick) / 1000;
+    let gained = getPPS().mul(diff);
+    game.studs = game.studs.add(gained);
+    game.totalStuds = game.totalStuds.add(gained);
+    game.playTime += diff;
+    game.lastTick = now;
 
-  if (d.tree) {
-    game.tree = d.tree.map((v, i) => {
-      // If the index is odd (1, 3, 5, 7, 9), it's a leveling upgrade (ExpantaNum)
-      // If the index is even (0, 2, 4, 6, 8), it's a one-time purchase (Boolean)
-      if (i % 2 === 1) {
-        return EN(v || 0); // Force it back into an ExpantaNum object
-      }
-      return v;
-    });
-  }
-  if (game.activeTrial) {
-    if (game.studs.gte(TRIAL_GOALS[game.activeTrial - 1])) {
-      game.trialCompletions[game.activeTrial - 1] = true;
-      let t = game.activeTrial;
-      game.activeTrial = null;
-      alert("Trial " + t + " Complete!");
-      resetBaseplate(true);
+    if (d.tree) {
+      game.tree = d.tree.map((v, i) => {
+        // If the index is odd (1, 3, 5, 7, 9), it's a leveling upgrade (ExpantaNum)
+        // If the index is even (0, 2, 4, 6, 8), it's a one-time purchase (Boolean)
+        if (i % 2 === 1) {
+          return EN(v || 0); // Force it back into an ExpantaNum object
+        }
+        return v;
+      });
     }
-  }
-  updateUI();
-}, 50);
+    if (game.activeTrial) {
+      if (game.studs.gte(TRIAL_GOALS[game.activeTrial - 1])) {
+        game.trialCompletions[game.activeTrial - 1] = true;
+        let t = game.activeTrial;
+        game.activeTrial = null;
+        alert("Trial " + t + " Complete!");
+        resetBaseplate(true);
+      }
+    }
+    updateUI();
+  }, 50);
+}
