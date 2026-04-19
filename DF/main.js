@@ -135,3 +135,4 @@ function loading() {
     updateUI();
   }, 50);
 }
+loading();
