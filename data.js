@@ -26,8 +26,8 @@ let game = {
   trialCompletions: [false, false, false],
 
   // The Upgrade Tree: [S1, BP1, S2, BP2, S3, BP3, S4, BP4, S5, BP5]
-  // Even indexes are Booleans (One-time), Odd are ExpantaNum (Leveling)
-  tree: [false, EN(0), false, EN(0), false, EN(0), false, EN(0), false, EN(0)],
+  // S/BP pairs: One-time upgrade, then leveling version
+  tree: [false, false, EN(0), EN(0), false, false, EN(0), EN(0), false, false],
 
   notation: "Mixed Scientific",
   playTime: 0,

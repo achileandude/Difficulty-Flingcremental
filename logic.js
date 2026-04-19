@@ -39,8 +39,8 @@ function getPPS() {
 
   // --- UPGRADE TREE BOOSTS ---
   if (game.tree[0]) p = p.mul(1e20); // S1
-  if (game.tree[4].gt(0))
-    p = p.mul(game.studs.add(10).log10().pow(game.tree[4])); // S2: Recursive
+  if (game.tree[2].gt(0))
+    p = p.mul(game.studs.add(10).log10().pow(game.tree[2])); // S2: Recursive
 
   // --- TRIAL DEBUFFS ---
   if (game.activeTrial === 1) p = p.sqrt();
@@ -51,9 +51,9 @@ function getPPS() {
 function getCost(id) {
   switch (id) {
     case "base":
-      return game.baseLvl.gte(15)
-        ? "Maxed"
-        : EN(3).mul(EN(1.15).pow(game.baseLvl)).ceil();
+      if (game.baseLvl.gte(15)) return "Maxed";
+      if (game.baseLvl.eq(0)) return EN(0); // First base upgrade is free
+      return EN(3).mul(EN(1.15).pow(game.baseLvl)).ceil();
     case "mult":
       let mCap =
         30 + (game.bpUpg1 ? 70 : 0) + (game.trialCompletions[1] ? 25 : 0);
