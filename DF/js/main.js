@@ -103,7 +103,6 @@ function showTab(id) {
 // Initial Run
 load();
 let s = localStorage.getItem("flingcrementalSave");
-if (!s) return;
 let d = JSON.parse(s);
 setInterval(() => {
   let now = Date.now();
