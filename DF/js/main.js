@@ -115,15 +115,15 @@ setInterval(() => {
   game.lastTick = now;
 
   if (d.tree) {
-        game.tree = d.tree.map((v, i) => {
-            // If the index is odd (1, 3, 5, 7, 9), it's a leveling upgrade (ExpantaNum)
-            // If the index is even (0, 2, 4, 6, 8), it's a one-time purchase (Boolean)
-            if (i % 2 === 1) {
-                return EN(v || 0); // Force it back into an ExpantaNum object
-            }
-            return v;
-        });
-    }
+    game.tree = d.tree.map((v, i) => {
+      // If the index is odd (1, 3, 5, 7, 9), it's a leveling upgrade (ExpantaNum)
+      // If the index is even (0, 2, 4, 6, 8), it's a one-time purchase (Boolean)
+      if (i % 2 === 1) {
+        return EN(v || 0); // Force it back into an ExpantaNum object
+      }
+      return v;
+    });
+  }
   if (game.activeTrial) {
     if (game.studs.gte(TRIAL_GOALS[game.activeTrial - 1])) {
       game.trialCompletions[game.activeTrial - 1] = true;
