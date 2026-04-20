@@ -197,6 +197,10 @@ function resetBaseplate(forced = false) {
 }
 
 function buyBP(n) {
+  if (game.activeTrial === 2) {
+    alert("Baseplate upgrades are disabled in Trial 2!");
+    return;
+  }
   let costs = [0, 1, 3, 100, 5e8, 1e18];
   if (game.baseplates.gte(EN(costs[n])) && !game["bpUpg" + n]) {
     game.baseplates = game.baseplates.sub(EN(costs[n]));
@@ -221,12 +225,13 @@ function load() {
   });
 
   // Fix Tree Array Specifically (with safety check)
-  // Indices 0,1,4,5,8,9... are Booleans (one-time upgrades)
-  // Indices 2,3,6,7... are ExpantaNum (leveling upgrades)
+  // Leveling upgrades: S2 (2), BP2 (3), BP3 (5)
+  // All others are one-time
   if (d.tree && Array.isArray(d.tree)) {
+    const levelingIndices = [2, 3, 5];
     game.tree = d.tree.map((v, i) => {
-      const isLevelingIndex = i % 4 >= 2; // Indices 2,3,6,7,10,11...
-      return isLevelingIndex ? EN(v || 0) : v;
+      const isLeveling = levelingIndices.includes(i);
+      return isLeveling ? EN(v || 0) : v;
     });
   }
 

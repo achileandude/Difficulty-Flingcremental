@@ -2,8 +2,8 @@ function getPPS() {
   let p = EN(game.baseLvl);
 
   // --- DIFFICULTY SPIKES ---
-  if (game.activeTrial !== 3) {
-    // Trial 3 disables Spike boosts
+  if (game.activeTrial !== 1) {
+    // Trial 1 disables Spike boosts
     if (game.spike >= 1) p = p.mul(3);
     if (game.spike >= 2) p = p.mul(10);
     if (game.spike >= 3) p = p.mul(15);
@@ -11,10 +11,16 @@ function getPPS() {
   }
 
   // --- STUD UPGRADES ---
-  let mBase = 1.5 + (game.trialCompletions[1] ? 0.25 : 0);
+  let mBase =
+    1.5 +
+    (game.trialCompletions[1] ? 0.25 : 0) +
+    (game.tree[3].gt(0) ? 0.125 : 0);
   p = p.mul(EN(mBase).pow(game.multLvl));
 
-  let cBase = (game.bpUpg1 ? 3.5 : 3.0) + (game.trialCompletions[1] ? 0.25 : 0);
+  let cBase =
+    (game.bpUpg1 ? 3.5 : 3.0) +
+    (game.trialCompletions[1] ? 0.25 : 0) +
+    (game.tree[3].gt(0) ? 0.125 : 0);
   p = p.mul(EN(cBase).pow(game.compLvl));
 
   let wBase = game.bpUpg4 ? 1.5 : 1.325;
@@ -38,13 +44,27 @@ function getPPS() {
   if (game.trialCompletions[2]) p = p.mul(1e6);
 
   // --- UPGRADE TREE BOOSTS ---
-  if (game.tree[0]) p = p.mul(1e20); // S1
-  if (game.tree[2].gt(0))
-    p = p.mul(game.studs.add(10).log10().pow(game.tree[2])); // S2: Recursive
+  if (game.activeTrial !== 4) {
+    // Trial 4 disables tree upgrades
+    if (game.tree[0]) p = p.mul(1e25); // S1
+    if (game.tree[2].gt(0))
+      p = p.mul(game.studs.add(10).log10().pow(game.tree[2])); // S2: Recursive
+    if (game.tree[4]) p = p.pow(1.25); // S3: ^1.25
+    if (game.tree[6]) p = p.mul(1e50); // S4
+    if (game.tree[7]) p = p.pow(1.4); // BP4: ^1.4
+    if (game.tree[9]) p = p.mul(1e125); // BP5: x1e125
+  }
 
   // --- TRIAL DEBUFFS ---
-  if (game.activeTrial === 1) p = p.sqrt();
-  if (game.activeTrial === 5) p = p.mul(0.99); // Trial 5: -1% per second
+  if (game.activeTrial === 3) p = p.sqrt(); // Trial 3: sqrt
+  if (game.activeTrial === 4) p = p.pow(1.2); // Trial 4: ^1.2 reward
+  if (game.activeTrial === 5) {
+    // Trial 5: All 3 effects + ^1.25 boost
+    p = p.sqrt(); // Trial 3 effect: sqrt
+    if (game.spike >= 1) p = p.mul(1); // Trial 1 effect already handled above
+    // Trial 2 effect: baseplate upgrades disabled (handled in resetBaseplate)
+    p = p.pow(1.25); // Trial 5 bonus
+  }
 
   return p;
 }
@@ -95,22 +115,31 @@ function getBaseplateGain() {
   if (game.studs.lt(5e20)) return EN(0);
   let gain = game.studs.div(5e20).pow(0.2);
   if (game.bpUpg4) gain = gain.mul(game.studs.pow(0.15));
-  if (game.tree[1]) gain = gain.mul(1.05); // BP1 reward
+
+  // Tree effects
+  if (game.tree[1]) gain = gain.mul(1e9); // BP1: x1e9
+  if (game.tree[3].gt(0)) gain = gain.mul(EN(4).pow(game.tree[3])); // BP3: x4 compounding
+  if (game.tree[4]) gain = gain.pow(1.125); // S3: ^1.125
+  if (game.tree[9]) gain = gain.pow(1.175); // BP5: ^1.175
+
+  // Trial 5 bonus
+  if (game.activeTrial === 5) gain = gain.pow(1.25);
+
   return gain.floor().max(1);
 }
 
 function buyTree(index) {
   const costs = [
-    { c: EN("1e270"), cur: "studs", type: "once" }, // S1
-    { c: EN("1e45"), cur: "baseplates", type: "once" }, // BP1
-    { c: EN("1e315"), cur: "studs", type: "level" }, // S2
-    { c: EN("1e60"), cur: "baseplates", type: "level" }, // BP2
-    { c: EN("1e450"), cur: "studs", type: "level" }, // S3
-    { c: EN("1e90"), cur: "baseplates", type: "level" }, // BP3
-    { c: EN("1e600"), cur: "studs", type: "level" }, // S4
-    { c: EN("1e120"), cur: "baseplates", type: "level" }, // BP4
-    { c: EN("1e750"), cur: "studs", type: "level" }, // S5
-    { c: EN("1e150"), cur: "baseplates", type: "level" }, // BP5
+    { c: EN("1e200"), cur: "studs", type: "once" }, // S1
+    { c: EN("1e35"), cur: "baseplates", type: "once" }, // BP1
+    { c: EN("1e250"), cur: "studs", type: "level" }, // S2
+    { c: EN("1e45"), cur: "baseplates", type: "level" }, // BP2
+    { c: EN("1e350"), cur: "studs", type: "once" }, // S3
+    { c: EN("1e70"), cur: "baseplates", type: "level" }, // BP3
+    { c: EN("1e475"), cur: "studs", type: "once" }, // S4
+    { c: EN("1e95"), cur: "baseplates", type: "once" }, // BP4
+    { c: EN("1e600"), cur: "studs", type: "once" }, // S5
+    { c: EN("1e120"), cur: "baseplates", type: "once" }, // BP5
   ];
   let item = costs[index];
   if (!item) return;
