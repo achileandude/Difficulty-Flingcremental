@@ -116,7 +116,7 @@ function updateUI() {
   const trialText = document.getElementById("active-trial-text");
   if (trialText) {
     if (game.activeTrial) {
-      trialText.innerText = "CURRENTLY IN TRIAL " + game.activeTrial;
+      trialText.innerText = "You are currently in Trial " + game.activeTrial;
       trialText.classList.remove("hidden");
     } else {
       trialText.classList.add("hidden");
@@ -269,13 +269,6 @@ function gameLoop() {
     game.totalStuds = game.totalStuds.add(gained);
     game.playTime += diff;
     game.lastTick = now;
-
-    // Trial 4: Cap at 1e100
-    if (game.activeTrial === 4) {
-      if (game.studs.gt(EN(1e100))) {
-        game.studs = EN(1e100);
-      }
-    }
 
     // Check for trial completion
     if (game.activeTrial) {

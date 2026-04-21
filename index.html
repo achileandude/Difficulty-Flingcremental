@@ -43,14 +43,16 @@
 
     <div id="ms-container" class="ms-box hidden">
       <div id="ms-desc">Collecting Data...</div>
-      <div class="ms-bar"><div id="ms-fill" class="ms-fill"></div></div>
+      <div class="ms-bar">
+        <div id="ms-fill" class="ms-fill"></div>
+      </div>
     </div>
 
     <div id="tab-upgrades" class="tab-content">
       <div class="grid">
         <div class="card" id="upg-base" onclick="buy('base')">
           <span class="u-title">It ALL begins here.</span>
-          <span class="u-desc">Start generating Studs.</span>
+          <span class="u-desc">Start generating Studs and +1 stud gain.</span>
           <div class="u-stats">
             <span id="lvl-base">0/15</span
             ><span id="cost-base" class="u-cost">FREE</span>
@@ -170,30 +172,28 @@
       ></p>
       <div class="grid">
         <div class="card" onclick="enterTrial(1)">
-          <b class="u-title">Trial 1: Obby Accurate</b>
-          <span class="u-desc">Difficulty Spikes give no boost.</span>
-          <div class="u-stats">Goal: 1.00e100</div>
-        </div>
-        <div class="card" onclick="enterTrial(2)">
-          <b class="u-title">Trial 2: Futile</b>
-          <span class="u-desc">Baseplate upgrades disabled.</span>
-          <div class="u-stats">Goal: 1.00e75</div>
-        </div>
-        <div class="card" onclick="enterTrial(3)">
-          <b class="u-title">Trial 3: Rooting</b>
+          <b class="u-title">Trial 1: Rooting</b>
           <span class="u-desc">Stud gain is Square Rooted.</span>
           <div class="u-stats">Goal: 1.00e50</div>
         </div>
+        <div class="card" onclick="enterTrial(2)">
+          <b class="u-title">Trial 2: Futile</b>
+          <span class="u-desc">Baseplate upgrades are disabled.</span>
+          <div class="u-stats">Goal: 1.00e75</div>
+        </div>
+        <div class="card" onclick="enterTrial(3)">
+          <b class="u-title">Trial 3: Obby Accurate</b>
+          <span class="u-desc">Difficulty Spikes give no boost.</span>
+          <div class="u-stats">Goal: 1.00e100</div>
+        </div>
         <div class="card" onclick="enterTrial(4)">
-          <b class="u-title">Trial 4: Isolated</b>
-          <span class="u-desc"
-            >Upgrade Tree upgrades disabled. ^1.2 reward.</span
-          >
+          <b class="u-title">Trial 4: Limited</b>
+          <span class="u-desc">Can only hold 1e100 Studs max.</span>
           <div class="u-stats">Goal: 1.00e150</div>
         </div>
         <div class="card" onclick="enterTrial(5)">
-          <b class="u-title">Trial 5: Chaos</b>
-          <span class="u-desc">All effects. ^1.25 Stud & BP gain.</span>
+          <b class="u-title">Trial 5: Fragile</b>
+          <span class="u-desc">Lose 1% Studs per second.</span>
           <div class="u-stats">Goal: 1.00e200</div>
         </div>
       </div>
@@ -206,37 +206,39 @@
     </div>
 
     <div id="tab-tree" class="tab-content hidden">
-      <h2 style="color: #0ff">The Upgrade Tree</h2>
+      <h2 style="color: rgb(67, 0, 148)">Upgrade Tree</h2>
       <div class="tree-grid">
         <button class="card" onclick="buyTree(0)">
-          x1e25<br />Cost: 1e200 Studs
+          x1e25 Stud gain.<br />Cost: 1e270 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(1)">
-          x1e9<br />Cost: 1e35 Baseplates
+          x1e9 Baseplate gain.<br />Cost: 1e45 Baseplates
         </button>
         <button class="card" onclick="buyTree(2)">
-          Log^Lvl<br />Cost: 1e250 Studs
+          Log(Studs)^Lvl<br />Cost: 1e315 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(3)">
-          +0.125 Base<br />Cost: 1e45 Baseplates
+          +0.125 to both Multiplication Stud upgrades.<br />Cost: 1e60
+          Baseplates
         </button>
         <button class="card" onclick="buyTree(4)">
-          ^1.25<br />Cost: 1e350 Studs
+          ^1.25 Stud gain and ^1.125 Baseplate gain.<br />Cost: 1e450 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(5)">
-          x4 Comp<br />Cost: 1e70 Baseplates
+          x4 Baseplate gain.<br />Cost: 1e90 Baseplates
         </button>
         <button class="card" onclick="buyTree(6)">
-          x1e50<br />Cost: 1e475 Studs
+          x1e50 Stud gain.<br />Cost: 1e600 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(7)">
-          ^1.4<br />Cost: 1e95 Baseplates
+          ^1.4 Stud gain.<br />Cost: 1e120 Baseplates
         </button>
         <button class="card" onclick="buyTree(8)">
-          S5 Effect<br />Cost: 1e600 Studs
+          Unlock Trials 4 and 5.<br />Cost: 1e750 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(9)">
-          x1e125<br />Cost: 1e120 Baseplates
+          x1e125 Stud gain and ^1.175 Baseplate gain.<br />Cost: 1e150
+          Baseplates
         </button>
       </div>
     </div>
@@ -246,7 +248,7 @@
       <div class="ms-box" style="text-align: left">
         <p>Total Studs: <span id="stats-total">0</span></p>
         <p>Time Played: <span id="stats-time">0s</span></p>
-        <p>Trials Done: <span id="stats-trials">0</span>/5</p>
+        <p>Trials Done: <span id="stats-trials">0</span>/3</p>
       </div>
     </div>
 

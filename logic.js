@@ -4,10 +4,10 @@ function getPPS() {
   // --- DIFFICULTY SPIKES ---
   if (game.activeTrial !== 1) {
     // Trial 1 disables Spike boosts
-    if (game.spike >= 1) p = p.mul(3);
-    if (game.spike >= 2) p = p.mul(10);
-    if (game.spike >= 3) p = p.mul(15);
-    if (game.spike >= 4) p = p.mul(1e6).pow(1.025); // Unimpossible
+    if (game.spike >= 1) p = p.mul(5);
+    if (game.spike >= 2) p = p.mul(25);
+    if (game.spike >= 3) p = p.mul(125);
+    if (game.spike >= 4) p = p.mul(1e6).pow(1.05); // Unimpossible
   }
 
   // --- STUD UPGRADES ---
@@ -39,9 +39,9 @@ function getPPS() {
   }
 
   // --- BASEPLATE UPGRADES & TRIALS ---
-  if (game.bpUpg4) p = p.mul(1e12).pow(1.1);
-  if (game.trialCompletions[0]) p = p.pow(1.05);
-  if (game.trialCompletions[2]) p = p.mul(1e6);
+  if (game.bpUpg4) p = p.mul(1e15).pow(1.125);
+  if (game.trialCompletions[0]) p = p.pow(1.075);
+  if (game.trialCompletions[2]) p = p.mul(1e8);
 
   // --- UPGRADE TREE BOOSTS ---
   if (game.activeTrial !== 4) {
@@ -57,7 +57,7 @@ function getPPS() {
 
   // --- TRIAL DEBUFFS ---
   if (game.activeTrial === 3) p = p.sqrt(); // Trial 3: sqrt
-  if (game.activeTrial === 4) p = p.pow(1.2); // Trial 4: ^1.2 reward
+  if (game.activeTrial === 4) p = p.pow(1.25); // Trial 4: ^1.2 reward
   if (game.activeTrial === 5) {
     // Trial 5: All 3 effects + ^1.25 boost
     p = p.sqrt(); // Trial 3 effect: sqrt
