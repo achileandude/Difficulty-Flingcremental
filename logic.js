@@ -130,16 +130,16 @@ function getBaseplateGain() {
 
 function buyTree(index) {
   const costs = [
-    { c: EN("1e200"), cur: "studs", type: "once" }, // S1
-    { c: EN("1e35"), cur: "baseplates", type: "once" }, // BP1
-    { c: EN("1e250"), cur: "studs", type: "level" }, // S2
-    { c: EN("1e45"), cur: "baseplates", type: "level" }, // BP2
-    { c: EN("1e350"), cur: "studs", type: "once" }, // S3
-    { c: EN("1e70"), cur: "baseplates", type: "level" }, // BP3
-    { c: EN("1e475"), cur: "studs", type: "once" }, // S4
-    { c: EN("1e95"), cur: "baseplates", type: "once" }, // BP4
-    { c: EN("1e600"), cur: "studs", type: "once" }, // S5
-    { c: EN("1e120"), cur: "baseplates", type: "once" }, // BP5
+    { c: EN("1e210"), cur: "studs", type: "once" }, // S1
+    { c: EN("1e36"), cur: "baseplates", type: "once" }, // BP1
+    { c: EN("1e260"), cur: "studs", type: "level" }, // S2
+    { c: EN("1e46"), cur: "baseplates", type: "level" }, // BP2
+    { c: EN("1e360"), cur: "studs", type: "once" }, // S3
+    { c: EN("1e71"), cur: "baseplates", type: "level" }, // BP3
+    { c: EN("1e485"), cur: "studs", type: "once" }, // S4
+    { c: EN("1e96"), cur: "baseplates", type: "once" }, // BP4
+    { c: EN("1e610"), cur: "studs", type: "once" }, // S5
+    { c: EN("1e121"), cur: "baseplates", type: "once" }, // BP5
   ];
   let item = costs[index];
   if (!item) return;

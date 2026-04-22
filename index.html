@@ -41,13 +41,6 @@
       <button onclick="showTab('settings')">Settings</button>
     </div>
 
-    <div id="ms-container" class="ms-box hidden">
-      <div id="ms-desc">Collecting Data...</div>
-      <div class="ms-bar">
-        <div id="ms-fill" class="ms-fill"></div>
-      </div>
-    </div>
-
     <div id="tab-upgrades" class="tab-content">
       <div class="grid">
         <div class="card" id="upg-base" onclick="buy('base')">
@@ -106,7 +99,13 @@
       class="tab-content hidden"
       style="width: 100%; max-width: 600px"
     >
-      <h2>Difficulty Milestone History</h2>
+      <h2>Difficulty Spikes</h2>
+      <div id="ms-container" class="ms-box hidden">
+        <div id="ms-desc">Collecting Data...</div>
+        <div class="ms-bar">
+          <div id="ms-fill" class="ms-fill"></div>
+        </div>
+      </div>
       <div id="spike-list"></div>
     </div>
 
@@ -209,35 +208,35 @@
       <h2 style="color: rgb(67, 0, 148)">Upgrade Tree</h2>
       <div class="tree-grid">
         <button class="card" onclick="buyTree(0)">
-          x1e25 Stud gain.<br />Cost: 1e270 Studs
+          x1e25 Stud gain.<br />Cost: 1e210 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(1)">
-          x1e9 Baseplate gain.<br />Cost: 1e45 Baseplates
+          x1e9 Baseplate gain.<br />Cost: 1e36 Baseplates
         </button>
         <button class="card" onclick="buyTree(2)">
-          Log(Studs)^Lvl<br />Cost: 1e315 Studs
+          Log(Studs)^Lvl<br />Cost: 1e260 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(3)">
-          +0.125 to both Multiplication Stud upgrades.<br />Cost: 1e60
+          +0.125 to both Multiplication Stud upgrades.<br />Cost: 1e46
           Baseplates
         </button>
         <button class="card" onclick="buyTree(4)">
-          ^1.25 Stud gain and ^1.125 Baseplate gain.<br />Cost: 1e450 Studs
+          ^1.25 Stud gain and ^1.125 Baseplate gain.<br />Cost: 1e360 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(5)">
-          x4 Baseplate gain.<br />Cost: 1e90 Baseplates
+          x4 Baseplate gain.<br />Cost: 1e71 Baseplates
         </button>
         <button class="card" onclick="buyTree(6)">
-          x1e50 Stud gain.<br />Cost: 1e600 Studs
+          x1e50 Stud gain.<br />Cost: 1e485 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(7)">
-          ^1.4 Stud gain.<br />Cost: 1e120 Baseplates
+          ^1.4 Stud gain.<br />Cost: 1e96 Baseplates
         </button>
         <button class="card" onclick="buyTree(8)">
-          Unlock Trials 4 and 5.<br />Cost: 1e750 Studs
+          Unlock Trials 4 and 5.<br />Cost: 1e610 Studs
         </button>
         <button class="card bp-card" onclick="buyTree(9)">
-          x1e125 Stud gain and ^1.175 Baseplate gain.<br />Cost: 1e150
+          x1e125 Stud gain and ^1.175 Baseplate gain.<br />Cost: 1e121
           Baseplates
         </button>
       </div>
@@ -248,7 +247,7 @@
       <div class="ms-box" style="text-align: left">
         <p>Total Studs: <span id="stats-total">0</span></p>
         <p>Time Played: <span id="stats-time">0s</span></p>
-        <p>Trials Done: <span id="stats-trials">0</span>/3</p>
+        <p>Trials Done: <span id="stats-trials">0</span>/5</p>
       </div>
     </div>
 
