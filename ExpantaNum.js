@@ -27,7 +27,7 @@
     // NONE   0 Show no information.
     // NORMAL 1 Show operations.
     // ALL    2 Show everything.
-    debug: 2
+    debug: 0
   },
 
 
