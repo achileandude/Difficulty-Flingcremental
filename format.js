@@ -1,4 +1,5 @@
 function formatStandard(num) {
+    if (typeof num === "string") return num;
   let n = EN(num);
   if (n.lt(1000)) return n.toFixed(2);
 

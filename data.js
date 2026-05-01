@@ -7,10 +7,11 @@ let game = {
     flingersLvl: EN(0),
     accBought: false,
     spike: 0,
-    // NEW: Prestige & Darkness
     skybox: 0,
     darkStuds: EN(0),
     darkUpg1: EN(0), 
+    darkUpg2: EN(0), // Darker
+    darkUpg3: false, // Velocity
     lastTick: Date.now()
 };
 
@@ -48,6 +49,8 @@ function load() {
         game.skybox = data.skybox || 0;
         game.darkStuds = EN(data.darkStuds || 0);
         game.darkUpg1 = EN(data.darkUpg1 || 0);
+        game.darkUpg2 = EN(data.darkUpg2 || 0);
+        game.darkUpg3 = data.darkUpg3 || false;
         game.lastTick = Date.now();
     }
 }
