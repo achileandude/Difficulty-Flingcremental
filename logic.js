@@ -50,6 +50,12 @@ window.getPPS = function () {
   if (game.spike >= 2) {
     pps = pps.mul(5);
   }
+
+  // Negativity Boost: x25 boost
+  if (game.spike >= 3) {
+    pps = pps.mul(25);
+  }
+
   return pps;
 };
 
@@ -63,6 +69,18 @@ window.getDarkGain = function () {
     gain = gain.mul(EN(1.75).pow(game.darkUpg2));
   }
   if (game.darkUpg3Bought) gain = gain.mul(2);
+
+  // Negativity boost: x5 boost
+  if (game.spike >= 3) {
+    gain = gain.mul(5);
+  }
+
+  // Synergy: Studs boost Darkness Studs based on log10(Studs)^1.25
+  if (game.synergyBought) {
+    let synergyBoost = game.studs.add(1).log10().pow(1.25);
+    gain = gain.mul(synergyBoost);
+  }
+
   return gain;
 };
 
@@ -106,6 +124,9 @@ window.getCost = function (id) {
     case "dark3":
       return game.darkUpg3Bought ? "BOUGHT" : EN(1250);
 
+    case "synergy":
+      return game.synergyBought ? "BOUGHT" : EN("5e19"); // 50Qn Studs far
+
     default:
       return EN(0);
   }
@@ -132,6 +153,7 @@ window.buy = function (id) {
     if (id === "dark1") game.darkUpg1 = game.darkUpg1.add(1);
     if (id === "dark2") game.darkUpg2 = game.darkUpg2.add(1);
     if (id === "dark3") game.darkUpg3Bought = true;
+    if (id === "synergy") game.synergyBought = true;
 
     updateUI(); // Immediately update the visuals
   }
@@ -147,6 +169,9 @@ window.getSpikeRequirement = function () {
 
   // Spike 2: The Lower Gap
   if (game.spike === 1) return EN(100000);
+
+  // Spike 3: Negativity
+  if (game.spike === 2) return EN("5e17"); // 500 Quadragintillion
 
   return EN(Infinity);
 };

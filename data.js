@@ -19,13 +19,16 @@ const INITIAL_GAME = {
   flingersLvl: EN(0),
 
   // Progression
-  spike: 0, // 0: None, 1: First Spike, 2: Second Spike
+  spike: 0, // 0: None, 1: First Spike, 2: Second Spike, 3: Third Spike (Negativity)
   skybox: 0, // Prestige count
 
   // Darkness Upgrades
   darkUpg1: EN(0),
   darkUpg2: EN(0),
   darkUpg3Bought: false,
+
+  // Synergy Upgrade (Spike 3)
+  synergyBought: false,
 
   // Timing
   lastTick: Date.now(),

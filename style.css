@@ -186,3 +186,13 @@ body {
     #003300 100%
   ) !important;
 }
+
+/* Spike 3: Purple and Dark Purple Gradient */
+.fill-spike-3 {
+  background: linear-gradient(
+    90deg,
+    #bb00ff 0%,
+    #7700bb 50%,
+    #330055 100%
+  ) !important;
+}
