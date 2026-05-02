@@ -1,143 +1,270 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Difficulty Flingcremental</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button
+      onclick="document.getElementById('settings-tab').style.display = 'flex'"
+      class="settings-btn"
+      style="position: absolute; top: 10px; right: 10px"
+    >
+      Settings
+    </button>
 
-    <button onclick="document.getElementById('settings-tab').style.display='block'" class="settings-btn" style="position: absolute; top: 10px; right: 10px;">Settings</button>
-    
-    <div id="settings-tab" class="outlined-text">
-        <h2>SETTINGS</h2>
-        <button class="settings-btn" onclick="save()">Manual Save</button>
-        <button class="settings-btn danger" onclick="hardReset()">HARD RESET</button>
-        <br><br>
-        <button class="settings-btn" onclick="this.parentElement.style.display='none'">Close</button>
+    <div
+      style="
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+        width: 100%;
+        margin-top: 20px;
+      "
+    >
+      <button
+        id="btn-tab-main"
+        class="settings-btn active"
+        onclick="switchTab('main')"
+      >
+        Fling Track
+      </button>
+      <button
+        id="btn-tab-skyboxes"
+        class="settings-btn hidden"
+        onclick="switchTab('skyboxes')"
+      >
+        Skyboxes
+      </button>
+      <button
+        id="btn-tab-darkness"
+        class="settings-btn hidden"
+        onclick="switchTab('darkness')"
+        style="background-color: #000000"
+      >
+        Darkness
+      </button>
     </div>
 
-    <div style="display:flex; gap: 10px; margin-bottom: 20px; justify-content: center; width: 100%; margin-top: 20px;">
-        <button id="btn-tab-main" class="settings-btn active"
-        onclick="switchTab('main')">Fling Track</button>
-        <button id="btn-tab-darkness" class="settings-btn hidden"
-        onclick="switchTab('darkness')" style="background-color:
-        #000000;">Darkness</button>
+    <div
+      id="settings-tab"
+      class="outlined-text"
+      style="
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background: #1a1a1a;
+        padding: 20px;
+        border: 2px solid #fff;
+      "
+    >
+      <h2>SETTINGS</h2>
+      <button class="settings-btn" onclick="save()">Manual Save</button>
+      <button class="settings-btn danger" onclick="hardReset()">
+        HARD RESET
+      </button>
+      <br /><br />
+      <button
+        class="settings-btn"
+        onclick="this.parentElement.style.display = 'none'"
+      >
+        Close
+      </button>
     </div>
 
-    <div id="tab-main" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-        <h1 class="outlined-text">You have flung <span
-        id="stud-display">0</span> Studs far.</h1>
-        <p class="outlined-text">Fling speed: <span id="pps-display">0</span>/s</p>
+    <div
+      id="tab-main"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      "
+    >
+      <h1 class="outlined-text">
+        You have flung <span id="stud-display">0</span> Studs far.
+      </h1>
+      <p class="outlined-text">
+        Fling speed: <span id="pps-display">0</span>/s
+      </p>
 
-        <div id="spike-area" style="display:none; text-align: center; margin-bottom: 20px; width: 80%; max-width: 400px;">
-            <div id="spike-name" class="spike-header outlined-text">The First Difficulty</div>
-            <div class="progress-container">
-                <div id="ms-fill" class="progress-fill"></div>
-            </div>
+      <div
+        id="spike-area"
+        style="
+          display: none;
+          text-align: center;
+          margin-bottom: 20px;
+          width: 80%;
+          max-width: 400px;
+        "
+      >
+        <div id="spike-name" class="spike-header outlined-text">
+          The First Difficulty
+        </div>
+        <div class="progress-container">
+          <div id="ms-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card" onclick="buy('base')">
+          <span class="u-title outlined-text">It ALL begins here.</span>
+          <br />
+          <span class="u-desc outlined-text"
+            >Start flinging at a rate of 1 Stud per second, +1 per level.</span
+          >
+          <div class="u-stats outlined-text">
+            <span id="lvl-base">0/10</span>
+            <span id="cost-base">FREE</span>
+          </div>
         </div>
 
-        <div class="grid">
-            <div class="card" onclick="buy('base')">
-                <span class="u-title outlined-text">It ALL begins here.</span>
-                <br>
-                <span class="u-desc outlined-text">Start flinging at a rate of 1
-                Stud per second, +1 per level.</span>
-                <div class="u-stats outlined-text">
-                    <span id="lvl-base">0/10</span>
-                    <span id="cost-base">FREE</span>
-                </div>
-            </div>
-
-            <div class="card hidden" id="upg-boost" onclick="buy('boost')">
-                <span class="u-title outlined-text">Fling Boost</span> <br>
-                <span class="u-desc outlined-text">Boost Fling speed by x1.35
-                compounding.</span>
-                <div class="u-stats outlined-text">
-                    <span id="lvl-boost">0/15</span>
-                    <span id="cost-boost">150</span>
-                </div>
-            </div>
-
-            <div class="card hidden" id="upg-acc" onclick="buy('acc')">
-                <span class="u-title outlined-text">Acceleration</span>
-                <span class="u-desc outlined-text">Fling speed boosts itself.</span>
-                <div class="u-stats outlined-text">
-                    <span>ONE-TIME</span>
-                    <span id="cost-acc">1250</span>
-                </div>
-            </div>
-
-            <div class="card hidden" id="upg-flingers" onclick="buy('flingers')">
-                <span class="u-title outlined-text">Flingers</span>
-                <span class="u-desc">x10 Fling speed compounding per level.</span>
-                <div class="u-stats outlined-text">
-                    <span id="lvl-flingers">0/3</span>
-                    <span id="cost-flingers">1M</span>
-                </div>
-            </div>
-
-    <div id="tab-skyboxes" style="display: none; flex-direction: column; align-items: center; width: 100%; padding-top: 20px;">
-        <h1 class="outlined-text">The Skyboxes</h1>
-        <p class="outlined-text">Break the boundaries of the realm.</p>
-        
-        <div class="grid">
-            <div class="card" id="upg-skybox" onclick="buySkybox()" style="border-color: #333; background-color: #000;">
-                <span class="u-title outlined-text" style="color: #aa00ff;">BLACKBOX</span>
-                <span class="u-desc" style="color: #ccc;">Reset EVERYTHING. Gain immense power.</span>
-                <div class="u-stats outlined-text" style="color: #aa00ff;">
-                    <span>10.0B Studs</span>
-                </div>
-            </div>
+        <div class="card hidden" id="upg-boost" onclick="buy('boost')">
+          <span class="u-title outlined-text">Fling Boost</span> <br />
+          <span class="u-desc outlined-text"
+            >Boost Fling speed by x1.35 compounding.</span
+          >
+          <div class="u-stats outlined-text">
+            <span id="lvl-boost">0/15</span>
+            <span id="cost-boost">150</span>
+          </div>
         </div>
+
+        <div class="card hidden" id="upg-acc" onclick="buy('acc')">
+          <span class="u-title outlined-text">Acceleration</span>
+          <span class="u-desc outlined-text">Fling speed boosts itself.</span>
+          <div class="u-stats outlined-text">
+            <span>ONE-TIME</span>
+            <span id="cost-acc">1250</span>
+          </div>
+        </div>
+
+        <div class="card hidden" id="upg-flingers" onclick="buy('flingers')">
+          <span class="u-title outlined-text">Flingers</span>
+          <span class="u-desc">x10 Fling speed compounding per level.</span>
+          <div class="u-stats outlined-text">
+            <span id="lvl-flingers">0/3</span>
+            <span id="cost-flingers">1M</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-<div id="tab-skyboxes" style="display: none; flex-direction: column; align-items: center; width: 100%; padding-top: 20px;">
-    <h1 class="outlined-text">The Skyboxes</h1>
-    <div class="grid">
-        <div class="card" id="upg-skybox" onclick="buySkybox()" style="border-color: #333; background-color: #000;">
-            <span class="u-title outlined-text" style="color: #aa00ff;">BLACKBOX</span>
-            <div class="u-stats outlined-text" style="color: #aa00ff;"><span>10.0B Studs</span></div>
-        </div>
-    </div>
-</div>
+    <div
+      id="tab-skyboxes"
+      style="
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding-top: 20px;
+      "
+    >
+      <h1 class="outlined-text">The Skyboxes</h1>
+      <p class="outlined-text">Break the boundaries of the realm.</p>
 
-<div id="tab-darkness" style="display: none; flex-direction: column; align-items: center; width: 100%; min-height: 100vh; background-color: #000; padding-top: 20px;">
-    <h1 class="outlined-text" style="color: #fff;">Darkness Studs: <span id="dark-display" style="color: #aa00ff">0</span></h1>
-    <p class="outlined-text" style="color: #ccc;">Generating <span id="dark-pps-display">0</span>/s</p>
-
-    <div class="grid">
-        <div class="card" id="upg-dark1" onclick="buy('dark1')" style="border-color: #550055; background-color: #110011;">
-            <span class="u-title outlined-text" style="color: #aa00ff;">Dark.</span>
-            <div class="u-stats outlined-text" style="color: #aa00ff;">
-                <span id="lvl-dark1">0/3</span>
-                <span id="cost-dark1">15</span>
-            </div>
+      <div class="grid">
+        <div
+          class="card"
+          id="upg-skybox"
+          onclick="buySkybox()"
+          style="border-color: #333; background-color: #000"
+        >
+          <span class="u-title outlined-text" style="color: #aa00ff"
+            >BLACKBOX</span
+          >
+          <span class="u-desc" style="color: #ccc"
+            >Reset EVERYTHING. Gain immense power.</span
+          >
+          <div class="u-stats outlined-text" style="color: #aa00ff">
+            <span>10.0B Studs</span>
+          </div>
         </div>
-        <div class="card" id="upg-dark2" onclick="buy('dark2')" style="border-color: #550055; background-color: #110011;">
-            <span class="u-title outlined-text" style="color: #aa00ff;">Darker</span>
-            <div class="u-stats outlined-text" style="color: #aa00ff;">
-                <span id="lvl-dark2">0/10</span>
-                <span id="cost-dark2">100</span>
-            </div>
-        </div>
-        <div class="card" id="upg-dark3" onclick="buy('dark3')" style="border-color: #550055; background-color: #110011;">
-            <span class="u-title outlined-text" style="color: #aa00ff;">Velocity</span>
-            <div class="u-stats outlined-text" style="color: #aa00ff;">
-                <span>ONE-TIME</span>
-                <span id="cost-dark3">1250</span>
-            </div>
-        </div>
+      </div>
     </div>
-</div>
-</div>
-</div>
+
+    <div
+      id="tab-darkness"
+      style="
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #1a1a1a;
+        padding-top: 20px;
+      "
+    >
+      <h1 class="outlined-text" style="color: #fff">
+        Darkness Studs: <span id="dark-display" style="color: #aa00ff">0</span>
+      </h1>
+      <p class="outlined-text" style="color: #ccc">
+        Generating <span id="dark-pps-display">0</span>/s
+      </p>
+
+      <div class="grid">
+        <div
+          class="card"
+          id="upg-dark1"
+          onclick="buy('dark1')"
+          style="border-color: #550055; background-color: #110011"
+        >
+          <span class="u-title dark-upgrade-title">Dark.</span>
+          <span class="u-desc dark-upgrade-desc"
+            >Boost Fling speed by x5 compounding and Darkness Studs gain by x2.5
+            compounding.</span
+          >
+          <div class="u-stats dark-upgrade-title">
+            <span id="lvl-dark1">0/3</span>
+            <span id="cost-dark1">15</span>
+          </div>
+        </div>
+        <div
+          class="card"
+          id="upg-dark2"
+          onclick="buy('dark2')"
+          style="border-color: #550055; background-color: #110011"
+        >
+          <span class="u-title dark-upgrade-title">Darker</span>
+          <span class="u-desc dark-upgrade-desc"
+            >Boost Darkness Studs gain by x1.75 compounding.</span
+          >
+          <div class="u-stats dark-upgrade-title">
+            <span id="lvl-dark2">0/10</span>
+            <span id="cost-dark2">100</span>
+          </div>
+        </div>
+        <div
+          class="card"
+          id="upg-dark3"
+          onclick="buy('dark3')"
+          style="border-color: #550055; background-color: #110011"
+        >
+          <span class="u-title dark-upgrade-title">Velocity</span>
+          <span class="u-desc dark-upgrade-desc"
+            >Power Acceleration's formula by ^1.75.</span
+          >
+          <div class="u-stats dark-upgrade-title">
+            <span>ONE-TIME</span>
+            <span id="cost-dark3">1250</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="ExpantaNum.js"></script>
     <script src="data.js"></script>
     <script src="format.js"></script>
     <script src="logic.js"></script>
     <script src="main.js"></script>
-</body>
+  </body>
 </html>
